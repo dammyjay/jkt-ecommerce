@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title || "JKT E-Commerce" %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Navbar -->
+ <%- include('partials/navbar', { user: typeof user !== 'undefined' ? user : null }) %>
+
+  <!-- Page Content -->
+  <main class="page-content">
+    <%- body %>
+  </main>
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+<div class="profile-container">
+  <h2>My Profile</h2>
+  <% if (user.profile_image) { %>
+    <img src="<%= user.profile_image %>" alt="Profile Picture" class="profile-pic">
+  <% } else { %>
+    <i class="fa fa-user-circle profile-icon-large"></i>
+  <% } %>
+
+  <p><strong>Full Name:</strong> <%= user.fullname %></p>
+  <p><strong>Email:</strong> <%= user.email %></p>
+</div>

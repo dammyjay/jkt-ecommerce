@@ -1,0 +1,30 @@
+
+
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/">Home</a>
+    <a href="/products">Shop</a>
+    <a href="/cart">Cart</a>
+
+    <% if (user && user.role === 'admin') { %>
+      <a href="/admin/orders">Admin Panel</a>
+    <% } %>
+
+    <% if (user) { %>
+      <div class="nav-profile">
+        <a href="/profile" class="profile-link">
+          <% if (user.profile_image) { %>
+            <img src="<%= user.profile_image %>" alt="Profile" class="profile-icon">
+          <% } else { %>
+            <i class="fa fa-user-circle"></i>
+          <% } %>
+        </a>
+        <a href="/auth/logout">Logout</a>
+      </div>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+      <a href="/auth/signup">Signup</a>
+    <% } %>
+  </div>
+</nav>

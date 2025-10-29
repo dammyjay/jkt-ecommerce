@@ -1,0 +1,135 @@
+<section class="auth-section">
+  <div class="auth-container">
+    <div class="auth-box">
+      <h2>Create Account</h2>
+
+      <!-- <form id="signupForm" action="/auth/signup" method="POST">
+        <div class="input-group">
+          <input type="text" name="fullname" placeholder="Full Name" required />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="email"
+            name="email"
+            id="emailField"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn">Sign Up</button>
+      </form> -->
+
+      <form
+        id="signupForm"
+        action="/auth/signup"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="input-group">
+          <input type="text" name="fullname" placeholder="Full Name" required />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="email"
+            name="email"
+            id="emailField"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="profileImage">Upload Profile Image</label>
+          <input type="file" name="profileImage" accept="image/*" />
+        </div>
+
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+
+      <div class="social-login">
+        <p>Or continue with</p>
+        <div class="social-buttons">
+          <a href="/auth/google" class="google-btn">Google</a>
+          <a href="/auth/facebook" class="facebook-btn">Facebook</a>
+          <a href="/auth/linkedin" class="linkedin-btn">LinkedIn</a>
+        </div>
+      </div>
+
+      <p class="note">
+        Already have an account? <a href="/auth/login">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- OTP Modal -->
+  <div id="otpModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal">&times;</span>
+      <h3>Email Verification</h3>
+      <p>We’ve sent an OTP to your email. Please verify below.</p>
+
+      <form id="otpForm" action="/auth/verifyOtp" method="POST">
+        <input type="email" name="email" id="otpEmail" readonly />
+        <input
+          type="text"
+          name="otp"
+          placeholder="Enter OTP"
+          maxlength="6"
+          required
+        />
+        <button type="submit" class="btn">Verify</button>
+      </form>
+      <p id="otpMessage"></p>
+    </div>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById("signupForm");
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(signupForm);
+      const res = await fetch("/auth/signup", {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok) {
+        document.getElementById("otpModal").style.display = "flex";
+        document.getElementById("otpEmail").value =
+          document.getElementById("emailField").value;
+      } else {
+        alert("Signup failed. Please try again.");
+      }
+    });
+
+    document.getElementById("closeModal").onclick = () => {
+      document.getElementById("otpModal").style.display = "none";
+    };
+
+    window.onclick = (e) => {
+      if (e.target === document.getElementById("otpModal")) {
+        document.getElementById("otpModal").style.display = "none";
+      }
+    };
+  </script>
+</section>

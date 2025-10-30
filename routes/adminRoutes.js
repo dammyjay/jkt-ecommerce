@@ -16,6 +16,7 @@ const adminController = require("../controllers/adminController");
 const { isAdmin } = require("../middlewares/authMiddleware");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
+const userController = require("../controllers/userController");
 
 
 // Admin Dashboard (protected)
@@ -27,6 +28,10 @@ router.get("/products", isAdmin, productController.getAllProductsAdmin);
 
 // ✅ Admin Orders Page
 router.get("/orders", isAdmin, orderController.getAllOrdersAdmin);
+
+router.get("/users", isAdmin, userController.getAllUsers);
+router.post("/users/:id/edit", isAdmin, userController.editUser);
+router.post("/users/:id/delete", isAdmin, userController.deleteUser);
 
 
 module.exports = router;

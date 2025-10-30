@@ -95,6 +95,7 @@ body {
 
 .nav-logo {
     height: 40px;
+    border-radius: 50%;
 }
 
 /* LINKS */

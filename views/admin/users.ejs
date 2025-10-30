@@ -1,10 +1,7 @@
-<!-- 
-
 <div class="admin-container">
   <h2>All Users</h2>
 
-  <div class="table-wrapper">
-    <table class="styled-table">
+    <table class="table">
       <thead>
         <tr>
           <th>ID</th>
@@ -15,18 +12,20 @@
         </tr>
       </thead>
       <tbody>
-        <% users.forEach(u => { %>
+        <% users.forEach(user => { %>
           <tr>
-            <td><%= u.id %></td>
-            <td><%= u.fullname %></td>
-            <td><%= u.email %></td>
-            <td><%= u.role %></td>
-            <td>
-              <button class="btn edit-btn" 
-                      onclick="openEditModal(<%= u.id %>, '<%= u.fullname %>', '<%= u.email %>', '<%= u.role %>')">
+            <td data-label="ID"><%= user.id %></td>
+            <td data-label="Name"><%= user.fullname %></td>
+            <td data-label="Email"><%= user.email %></td>
+            <td data-label="Role"><%= user.role %></td>
+            <td data-label="Actions">
+              <button 
+                class="btn edit-btn"
+                onclick="openEditModal('<%= user.id %>', '<%= user.fullname %>', '<%= user.email %>', '<%= user.role %>')">
                 Edit
               </button>
-              <form action="/admin/users/<%= u.id %>/delete" method="POST" style="display:inline;">
+
+              <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;">
                 <button type="submit" class="btn delete-btn">Delete</button>
               </form>
             </td>
@@ -34,41 +33,7 @@
         <% }) %>
       </tbody>
     </table>
-  </div>
-</div> -->
-
-<div class="admin-container">
-  <h2>All Users</h2>
-  <div class="table-container">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% users.forEach(user => { %>
-          <tr>
-            <td><%= user.id %></td>
-            <td><%= user.full_name %></td>
-            <td><%= user.email %></td>
-            <td><%= user.role %></td>
-            <td>
-              <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;">
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
 </div>
-
 
 <!-- 🧩 Edit User Modal -->
 <div id="editModal" class="modal">
@@ -98,7 +63,7 @@
 </div>
 
 <script>
-  // 🧠 Open modal and populate data
+  // 🧠 Open edit modal
   function openEditModal(id, fullname, email, role) {
     document.getElementById("editUserId").value = id;
     document.getElementById("editFullName").value = fullname;
@@ -113,13 +78,13 @@
     document.getElementById("editModal").style.display = "none";
   }
 
-  // Close when clicking outside modal
+  // Close modal when clicking outside
   window.onclick = (event) => {
     if (event.target.id === "editModal") closeModal();
   };
 </script>
 
-<!-- <style>
+<style>
   .admin-container {
     max-width: 1100px;
     margin: 40px auto;
@@ -132,6 +97,7 @@
   .admin-container h2 {
     margin-bottom: 20px;
     color: #333;
+    text-align: center;
   }
 
   .table-wrapper {
@@ -197,6 +163,7 @@
 
   .modal-content h3 {
     margin-bottom: 20px;
+    text-align: center;
   }
 
   .modal-content input, .modal-content select {
@@ -248,6 +215,4 @@
       color: #555;
     }
   }
-</style> -->
-
-
+</style>

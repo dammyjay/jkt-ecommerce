@@ -10,6 +10,8 @@ const layout = require("express-ejs-layouts");
 const pool = require("./utils/db");
 const createTables = require("./utils/initTables");
 const passport = require("./utils/passportSetup");
+const favicon = require("serve-favicon");
+
 // const session = require("express-session");
 // Load environment variables
 dotenv.config();
@@ -21,6 +23,8 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "images", "JKT logo bg.png")));
+
 app.use(layout);
 
 // 🖼️ EJS View Engine

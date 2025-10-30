@@ -17,10 +17,17 @@ const { isAdmin } = require("../middlewares/authMiddleware");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
 const userController = require("../controllers/userController");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 
 // Admin Dashboard (protected)
 router.get("/dashboard", isAdmin, adminController.getDashboard);
+// Profile page route
+router.get("/profile", adminController.getProfile);
+
+// Update profile
+router.post("/profile", upload.single("profileImage"), adminController.updateProfile);
 
 
 // ✅ Admin Products Page

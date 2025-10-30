@@ -25,7 +25,11 @@ async function initTables() {
         is_verified BOOLEAN DEFAULT false,
         role VARCHAR(20) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        profile_image TEXT
+        profile_image TEXT,
+        phone VARCHAR(20),
+        address TEXT,
+        city VARCHAR(100),
+        state VARCHAR(100)
       );
 
       -- CATEGORIES TABLE
@@ -54,15 +58,14 @@ async function initTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
-        -- SESSION TABLE (for connect-pg-simple)
-  CREATE TABLE IF NOT EXISTS session (
-    "sid" varchar PRIMARY KEY COLLATE "default",
-    "sess" json NOT NULL,
-    "expire" timestamp(6) NOT NULL
-  );
+      -- SESSION TABLE (for connect-pg-simple)
+      CREATE TABLE IF NOT EXISTS session (
+        "sid" varchar PRIMARY KEY COLLATE "default",
+        "sess" json NOT NULL,
+        "expire" timestamp(6) NOT NULL
+      );
 
-  CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
-
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
     `);
 
     console.log("✅ All tables initialized successfully");

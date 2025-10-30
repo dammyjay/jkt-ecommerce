@@ -97,6 +97,9 @@ app.use("/orders", orderRoutes);      // user-facing orders
 
 // ADMIN ROUTES
 app.use("/admin", adminRoutes);
+app.use("/users", userRoutes);
+
+
 
 
 // 🏠 HOME ROUTE
@@ -106,6 +109,7 @@ app.get("/", (req, res) => {
 
 // const userRoutes = require("./routes/userRoutes");
 // app.use("/", userRoutes);
+
 
 
 // 🧪 TEST ROUTE

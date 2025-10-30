@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
 const { isAuthenticated, isAdmin } = require("../middlewares/authMiddleware");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 // 🌐 Public & User Routes
 router.get("/", productController.getAllProducts); // Everyone can see products

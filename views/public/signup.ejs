@@ -90,7 +90,7 @@
       <p>We’ve sent an OTP to your email. Please verify below.</p>
 
       <form id="otpForm" action="/auth/verifyOtp" method="POST">
-        <input type="email" name="email" id="otpEmail" readonly />
+        <input type="email" name="email" id="otpEmail" readonly /> <br />
         <input
           type="text"
           name="otp"
@@ -100,36 +100,215 @@
         />
         <button type="submit" class="btn">Verify</button>
       </form>
+
       <p id="otpMessage"></p>
     </div>
   </div>
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="loader-container">
+    <!-- Custom loading image -->
+    <img src="/images/JKT logo.png" alt="Loading..." class="loader-img" />
+    <p>Signing you up...</p>
+  </div>
+</div>
 
-  <script>
-    const signupForm = document.getElementById("signupForm");
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const signupForm = document.getElementById("signupForm");
+  const otpModal = document.getElementById("otpModal");
+  const otpEmail = document.getElementById("otpEmail");
+  const emailField = document.getElementById("emailField");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+
+  // 🟢 Signup form submit
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Show loading icon
+    loadingOverlay.style.display = "flex";
+
+    try {
       const formData = new FormData(signupForm);
       const res = await fetch("/auth/signup", {
         method: "POST",
         body: formData,
       });
+
+      // Hide loader when response is received
+      loadingOverlay.style.display = "none";
+
       if (res.ok) {
-        document.getElementById("otpModal").style.display = "flex";
-        document.getElementById("otpEmail").value =
-          document.getElementById("emailField").value;
+        otpModal.style.display = "flex";
+        otpEmail.value = emailField.value;
       } else {
-        alert("Signup failed. Please try again.");
+        const errorText = await res.text();
+        Swal.fire({
+          icon: "error",
+          title: "Signup Failed",
+          text: errorText || "Something went wrong. Please try again.",
+        });
       }
+    } catch (err) {
+      loadingOverlay.style.display = "none";
+      Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Unable to connect to the server. Please check your internet.",
+      });
+    }
+  });
+
+  // 🟢 Close OTP modal
+  document.getElementById("closeModal").onclick = () => {
+    otpModal.style.display = "none";
+  };
+
+  // 🟢 Close modal when clicking outside it
+  window.onclick = (e) => {
+    if (e.target === otpModal) {
+      otpModal.style.display = "none";
+    }
+  };
+otpForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("otpEmail").value;
+  const otp = e.target.otp.value;
+
+  const res = await fetch("/auth/verifyOtp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }), // ✅ send JSON
+  });
+
+  const data = await res.json();
+  const msgEl = document.getElementById("otpMessage");
+
+  if (data.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Email Verified!",
+      text: "You can now log in to your account.",
+      showConfirmButton: false,
+      timer: 2000,
     });
+    setTimeout(() => (window.location.href = "/auth/login"), 2000);
+  } else {
+    msgEl.style.color = "#dc2626";
+    msgEl.textContent = data.message;
+  }
+});
 
-    document.getElementById("closeModal").onclick = () => {
-      document.getElementById("otpModal").style.display = "none";
-    };
+</script> -->
 
-    window.onclick = (e) => {
-      if (e.target === document.getElementById("otpModal")) {
-        document.getElementById("otpModal").style.display = "none";
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const signupForm = document.getElementById("signupForm");
+  const otpForm = document.getElementById("otpForm");
+  const otpModal = document.getElementById("otpModal");
+  const otpEmail = document.getElementById("otpEmail");
+  const emailField = document.getElementById("emailField");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+
+  // 🟢 Signup form submit
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Show loading icon
+    loadingOverlay.querySelector("p").textContent = "Signing you up...";
+    loadingOverlay.style.display = "flex";
+
+    try {
+      const formData = new FormData(signupForm);
+      const res = await fetch("/auth/signup", {
+        method: "POST",
+        body: formData,
+      });
+
+      // Hide loader once response is received
+      loadingOverlay.style.display = "none";
+
+      if (res.ok) {
+        otpModal.style.display = "flex";
+        otpEmail.value = emailField.value;
+      } else {
+        const errorText = await res.text();
+        Swal.fire({
+          icon: "error",
+          title: "Signup Failed",
+          text: errorText || "Something went wrong. Please try again.",
+        });
       }
-    };
-  </script>
+    } catch (err) {
+      loadingOverlay.style.display = "none";
+      Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Unable to connect to the server. Please check your internet.",
+      });
+    }
+  });
+
+  // 🟢 OTP form submit
+  otpForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Show loading overlay while verifying OTP
+    loadingOverlay.querySelector("p").textContent = "Verifying OTP...";
+    loadingOverlay.style.display = "flex";
+
+    const email = otpEmail.value;
+    const otp = e.target.otp.value;
+
+    try {
+      const res = await fetch("/auth/verifyOtp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await res.json();
+
+      // Hide loading overlay
+      loadingOverlay.style.display = "none";
+
+      if (data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Email Verified!",
+          text: "You can now log in to your account.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        setTimeout(() => (window.location.href = "/auth/login"), 2000);
+      } else {
+        const msgEl = document.getElementById("otpMessage");
+        msgEl.style.color = "#dc2626";
+        msgEl.textContent = data.message;
+      }
+    } catch (error) {
+      loadingOverlay.style.display = "none";
+      Swal.fire({
+        icon: "error",
+        title: "Verification Failed",
+        text: "Something went wrong. Please try again.",
+      });
+    }
+  });
+
+  // 🟢 Close OTP modal
+  document.getElementById("closeModal").onclick = () => {
+    otpModal.style.display = "none";
+  };
+
+  // 🟢 Close modal when clicking outside it
+  window.onclick = (e) => {
+    if (e.target === otpModal) {
+      otpModal.style.display = "none";
+    }
+  };
+</script>
+
+
 </section>

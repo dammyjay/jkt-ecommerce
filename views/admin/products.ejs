@@ -1,0 +1,157 @@
+
+
+<div class="admin-container">
+  <h1>🧑‍💼 Manage Products</h1>
+
+  <!-- ✅ Add Product Form -->
+  <form action="/products/admin/create" method="POST" class="add-product-form">
+    <input type="text" name="name" placeholder="Product Name" required>
+    <input type="text" name="description" placeholder="Description" required>
+    <input type="number" step="0.01" name="price" placeholder="Price" required>
+    <input type="number" name="stock" placeholder="Stock" required>
+    <button type="submit" class="btn">Add Product</button>
+  </form>
+
+  <!-- ✅ Product Table -->
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(product => { %>
+        <tr>
+          <td><%= product.id %></td>
+          <td><%= product.name %></td>
+          <td><%= product.description %></td>
+          <td>₦<%= product.price %></td>
+          <td><%= product.stock %></td>
+          <td>
+            <button 
+              class="btn-edit" 
+              onclick="openEditModal('<%= product.id %>', '<%= product.name %>', '<%= product.description %>', '<%= product.price %>', '<%= product.stock %>')">
+              Edit
+            </button>
+            <form action="/products/admin/<%= product.id %>/delete" method="POST" class="inline-form">
+              <button type="submit" class="btn-delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- 🧩 Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeEditModal()">&times;</span>
+    <h2>Edit Product</h2>
+    <form id="editForm" method="POST">
+      <input type="text" name="name" id="editName" required>
+      <input type="text" name="description" id="editDescription" required>
+      <input type="number" step="0.01" name="price" id="editPrice" required>
+      <input type="number" name="stock" id="editStock" required>
+      <button type="submit" class="btn">Update Product</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("editModal");
+
+  function openEditModal(id, name, description, price, stock) {
+    modal.style.display = "block";
+    document.getElementById("editName").value = name;
+    document.getElementById("editDescription").value = description;
+    document.getElementById("editPrice").value = price;
+    document.getElementById("editStock").value = stock;
+    document.getElementById("editForm").action = `/products/admin/${id}/update`;
+  }
+
+  function closeEditModal() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target === modal) closeEditModal();
+  };
+</script>
+
+<style>
+  .admin-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+  }
+  .add-product-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .add-product-form input, .add-product-form button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .product-table th, .product-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  .btn-edit {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .inline-form {
+    display: inline;
+  }
+  /* Modal Styling */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+  }
+  .modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 50%;
+    border-radius: 8px;
+  }
+  .close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    .add-product-form { flex-direction: column; }
+    .modal-content { width: 90%; }
+  }
+</style>
+
+

@@ -11,37 +11,6 @@ const ADMIN_EMAIL = "admin@jkthub.com";
 const ADMIN_PASSWORD = "admin123";
 
 // ================== SIGNUP ==================
-// const signup = async (req, res) => {
-//   try {
-//     const { fullname, email, password } = req.body;
-
-//     // Check if user already exists
-//     const existingUser = await pool.query("SELECT * FROM users2 WHERE email = $1", [email]);
-//     if (existingUser.rowCount > 0) {
-//       return res.render("public/signup", { message: "Email already registered" });
-//     }
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-//     await pool.query(
-//       "INSERT INTO users2 (fullname, email, password, otp, role) VALUES ($1, $2, $3, $4, $5)",
-//       [fullname, email, hashedPassword, otp, "user"]
-//     );
-
-//     await sendEmail(email, "Verify Your JKT Hub Account", `<p>Your OTP code is <b>${otp}</b></p>`);
-
-//     res.render("public/verifyOtp", {
-//       email,
-//       message: "Check your email for the OTP we just sent.",
-//       user: null,
-//     });
-//   } catch (error) {
-//     console.error("Signup Error:", error);
-//     res.render("public/signup", { message: "Something went wrong, please try again." });
-//   }
-// };
-
 const signup = async (req, res) => {
   try {
     console.log("🟢 Signup request received");
@@ -111,29 +80,56 @@ const signup = async (req, res) => {
 };
 
 
-
-
 // ================== VERIFY OTP ==================
+// const verifyOtp = async (req, res) => {
+//   try {
+//     const { email, otp } = req.body;
+//     const result = await pool.query("SELECT * FROM users2 WHERE email=$1 AND otp=$2", [email, otp]);
+
+//     if (result.rowCount === 0) {
+//       return res.render("public/verifyOtp", { email, message: "Invalid OTP", user: null });
+//     }
+
+//     await pool.query("UPDATE users2 SET is_verified=true, otp=NULL WHERE email=$1", [email]);
+
+//     res.render("public/login", {
+//       message: "✅ Verification successful. Please log in.",
+//       user: null,
+//     });
+//   } catch (error) {
+//     console.error("Verify OTP Error:", error);
+//     res.render("public/verifyOtp", { email, message: "Something went wrong", user: null });
+//   }
+// };
+
 const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    const result = await pool.query("SELECT * FROM users2 WHERE email=$1 AND otp=$2", [email, otp]);
+    const result = await pool.query(
+      "SELECT * FROM users2 WHERE email=$1 AND otp=$2",
+      [email, otp]
+    );
 
     if (result.rowCount === 0) {
-      return res.render("public/verifyOtp", { email, message: "Invalid OTP", user: null });
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    await pool.query("UPDATE users2 SET is_verified=true, otp=NULL WHERE email=$1", [email]);
+    await pool.query(
+      "UPDATE users2 SET is_verified=true, otp=NULL WHERE email=$1",
+      [email]
+    );
 
-    res.render("public/login", {
-      message: "✅ Verification successful. Please log in.",
-      user: null,
-    });
+    res.json({ success: true, message: "Verification successful" });
   } catch (error) {
     console.error("Verify OTP Error:", error);
-    res.render("public/verifyOtp", { email, message: "Something went wrong", user: null });
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while verifying OTP",
+    });
   }
 };
+
+
 
 // ================== LOGIN ==================
 const login = async (req, res) => {
@@ -143,7 +139,7 @@ const login = async (req, res) => {
     // Admin login
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       req.session.user = { fullname: "Admin", email, role: "admin" };
-      return res.redirect("/admin/orders");
+      return res.redirect("/admin/dashboard");
     }
 
     // Regular user login
@@ -171,7 +167,7 @@ const login = async (req, res) => {
 
     // Redirect by role
     if (user.role === "admin") {
-      res.redirect("/admin/orders");
+      res.redirect("/admin/dashboard");
     } else {
       res.redirect("/");
     }

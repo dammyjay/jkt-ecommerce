@@ -1,14 +1,11 @@
-
-
-
-<nav class="navbar">
+<!-- <nav class="navbar">
   <div class="container">
     <a href="/">Home</a>
     <a href="/products">Shop</a>
     <a href="/cart">Cart</a>
 
     <% if (user && user.role === 'admin') { %>
-      <a href="/admin/orders">Admin Panel</a>
+      <a href="/admin/dashboard">Admin Panel</a>
     <% } %>
 
     <% if (user) { %>
@@ -27,4 +24,106 @@
       <a href="/auth/signup">Signup</a>
     <% } %>
   </div>
+</nav> -->
+<!-- 
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="logo">
+      <img src="/css/images/JKT logo bg.png" alt="Logo" class="nav-logo">
+    </a>
+
+    <% if (user && user.role === 'admin') { %>
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/users">Users</a>
+      <a href="/profile">Profile</a>
+      <a href="/auth/logout" class="logout-btn">Logout</a>
+    <% } else if (user) { %>
+      <a href="/products">Shop</a>
+      <a href="/cart">Cart</a>
+      <a href="/orders">My Orders</a>
+      <div class="nav-profile">
+        <a href="/profile" class="profile-link">
+          <% if (user.profile_image) { %>
+            <img src="<%= user.profile_image %>" alt="Profile" class="profile-icon">
+          <% } else { %>
+            <i class="fa fa-user-circle"></i>
+          <% } %>
+        </a>
+        <a href="/auth/logout" class="logout-btn">Logout</a>
+      </div>
+    <% } else { %>
+      <a href="/products">Shop</a>
+      <a href="/auth/login">Login</a>
+      <a href="/auth/signup">Signup</a>
+    <% } %>
+  </div>
 </nav>
+ -->
+
+
+ <nav class="navbar">
+  <div class="container">
+    <a href="/" class="logo">
+      <img src="/css/images/JKT logo bg.png" alt="Logo" class="nav-logo">
+    </a>
+
+    <!-- Hamburger Toggle -->
+    <button class="menu-toggle" id="menu-toggle">
+      <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="nav-links" id="nav-links">
+      <% if (user && user.role === 'admin') { %>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/products">Products</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/users">Users</a>
+        <a href="/profile">Profile</a>
+        <a href="/auth/logout" class="logout-btn">Logout</a>
+      <% } else if (user) { %>
+        <a href="/products">Shop</a>
+        <a href="/cart">Cart</a>
+        <a href="/orders">My Orders</a>
+        <div class="nav-profile">
+          <a href="/profile" class="profile-link">
+            <% if (user.profile_image) { %>
+              <img src="<%= user.profile_image %>" alt="Profile" class="profile-icon">
+            <% } else { %>
+              <i class="fa fa-user-circle"></i>
+            <% } %>
+          </a>
+          <a href="/auth/logout" class="logout-btn">Logout</a>
+        </div>
+      <% } else { %>
+        <a href="/products">Shop</a>
+        <a href="/auth/login">Login</a>
+        <a href="/auth/signup">Signup</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<!-- <script>
+  const toggleBtn = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav-links");
+
+  toggleBtn.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
+  });
+</script> -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+
+    toggleBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+  });
+</script>
+

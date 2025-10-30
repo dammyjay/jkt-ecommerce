@@ -1,0 +1,83 @@
+
+<div class="admin-dashboard">
+  <h1>Welcome, <%= user.full_name %> 👋</h1>
+  <p>Here’s your store overview:</p>
+
+  <div class="dashboard-stats">
+    <div class="card">
+      <h2><%= stats.totalProducts %></h2>
+      <p>Products</p>
+    </div>
+    <div class="card">
+      <h2><%= stats.totalOrders %></h2>
+      <p>Orders</p>
+    </div>
+    <div class="card">
+      <h2><%= stats.totalUsers %></h2>
+      <p>Users</p>
+    </div>
+    <div class="card">
+      <h2>₦<%= stats.totalSales %></h2>
+      <p>Total Sales</p>
+    </div>
+  </div>
+
+<div class="admin-links">
+  <a href="/admin/products" class="btn"><i class="fa fa-box"></i> Manage Products</a>
+  <a href="/admin/orders" class="btn"><i class="fa fa-shopping-cart"></i> Manage Orders</a>
+  <a href="/admin/users" class="btn"><i class="fa fa-users"></i> Manage Users</a>
+</div>
+
+
+
+<style>
+  .admin-dashboard {
+    padding: 30px;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .card h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    color: #666;
+    font-size: 1rem;
+  }
+
+  .admin-links {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .admin-links .btn {
+    background: #007bff;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 5px;
+    margin: 0 10px;
+    text-decoration: none;
+  }
+
+  .admin-links .btn:hover {
+    background: #0056b3;
+  }
+</style>

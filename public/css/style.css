@@ -37,7 +37,7 @@ body {
 }
 
 /* ========== NAVBAR ========== */
-.navbar {
+/* .navbar {
     background: #2563eb;
     padding: 0.8rem 0;
     display: flex;
@@ -75,7 +75,85 @@ body {
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #ddd;
+} */
+
+.navbar {
+    background-color: #1e1e1e;
+    padding: 10px 20px;
+    position: relative;
+    z-index: 1000;
 }
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+    width: 100%;
+}
+
+.nav-logo {
+    height: 40px;
+}
+
+/* LINKS */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #f7b500;
+}
+
+/* PROFILE */
+.nav-profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+}
+
+.logout-btn {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    color: #ff6b6b;
+}
+
+/* TOGGLE BUTTON */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-toggle:hover {
+    color: #f7b500;
+}
+
+/* 📱 Mobile Responsiveness */
 
 .profile-container {
     text-align: center;
@@ -238,6 +316,313 @@ body {
 .linkedin-btn {
     background: #0077b5;
 }
+/* ========== OTP MODAL STYLING ========== */
+/* .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+} */
+
+/* OTP Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    /* 👈 lower than SweetAlert's 1000+ */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content box */
+.modal-content {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+/* Close button (X) */
+#closeModal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+#closeModal:hover {
+    color: #000;
+}
+
+/* Headings and text */
+.modal-content h3 {
+    color: #1e3a8a;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.modal-content p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* OTP form styling */
+#otpForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Input fields */
+#otpForm input[type="email"],
+#otpForm input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+#otpForm input:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+/* Verify button (uses existing .btn style) */
+#otpForm .btn {
+    width: 100%;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#otpForm .btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+}
+
+/* Message under form */
+#otpMessage {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #e11d48;
+    /* red for error */
+}
+
+/* Animation for appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Overlay Styles */
+/* #loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-container {
+    text-align: center;
+    color: #fff;
+}
+
+.loader-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+} */
+
+.swal2-container {
+    z-index: 2000 !important;
+}
+
+/* Loading Overlay */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    /* higher than modal but below SweetAlert */
+}
+
+.loader-container {
+    text-align: center;
+}
+
+.loader-img {
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+.admin-container {
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.table-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.table th {
+    background-color: #1e1e1e;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-danger {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #d32f2f;
+}
+
+/* ADMIN QUICK LINKS SECTION */
+.admin-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.admin-links .btn {
+    display: block;
+    text-align: center;
+    background-color: #2b2b2b;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.admin-links .btn:hover {
+    background-color: #f7b500;
+    color: #1e1e1e;
+    transform: translateY(-3px);
+}
+
+.admin-links .btn i {
+    margin-right: 8px;
+    font-size: 18px;
+}
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
@@ -252,4 +637,76 @@ body {
     .page-content {
         padding: 20px;
     }
+
+        .styled-table thead {
+      display: none;
+    }
+
+    .styled-table tr {
+      display: block;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #f1f1f1;
+    }
+
+    .styled-table td {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+
+    .styled-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #555;
+    }
+ .menu-toggle {
+     display: block;
+ }
+
+ .nav-links {
+     display: none;
+     flex-direction: column;
+     width: 100%;
+     background-color: #1e1e1e;
+     position: absolute;
+     top: 60px;
+     left: 0;
+     padding: 15px 0;
+ }
+
+ .nav-links.active {
+     display: flex;
+ }
+
+ .nav-links a {
+     text-align: center;
+     padding: 12px 0;
+     border-bottom: 1px solid #333;
+     margin: 0;
+ }
+
+        .table-container {
+        max-height: 400px;
+    }
+
+    .table th,
+    .table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+.admin-links {
+    grid-template-columns: 1fr;
+    padding: 10px;
+}
+
+.admin-links .btn {
+    font-size: 15px;
+    padding: 12px;
+}
+}
+
+@media (max-width: 768px) {
+
 }

@@ -79,24 +79,29 @@ app.use((req, res, next) => {
 
 // 🛒 ROUTES
 const authRoutes = require("./routes/authRoutes");
-// const adminRoutes = require("./routes/adminRoutes");
-// const productRoutes = require("./routes/productRoutes");
-// const orderRoutes = require("./routes/orderRoutes");
-// const cartRoutes = require("./routes/cartRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const userRoutes = require("./routes/userRoutes");
 
+// USER ROUTES
 app.use("/auth", authRoutes);
-// app.use("/admin", adminRoutes);
-// app.use("/products", productRoutes);
-// app.use("/orders", orderRoutes);
+app.use("/products", productRoutes);  // user-facing product routes
+app.use("/orders", orderRoutes);      // user-facing orders
 // app.use("/cart", cartRoutes);
+
+// ADMIN ROUTES
+app.use("/admin", adminRoutes);
+
 
 // 🏠 HOME ROUTE
 app.get("/", (req, res) => {
   res.render("public/home", { title: "Welcome to JKT E-Commerce" });
 });
 
-const userRoutes = require("./routes/userRoutes");
-app.use("/", userRoutes);
+// const userRoutes = require("./routes/userRoutes");
+// app.use("/", userRoutes);
 
 
 // 🧪 TEST ROUTE

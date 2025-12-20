@@ -9,14 +9,32 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const result = await pool.query("SELECT * FROM users2 WHERE id = $1", [id]);
+//     done(null, result.rows[0]);
+//   } catch (err) {
+//     done(err, null);
+//   }
+// });
+
 passport.deserializeUser(async (id, done) => {
   try {
-    const result = await pool.query("SELECT * FROM users2 WHERE id = $1", [id]);
+    const result = await pool.query(
+      "SELECT * FROM users2 WHERE id = $1",
+      [id]
+    );
+
+    if (!result.rows.length) {
+      return done(null, false); // 🔴 prevents crash
+    }
+
     done(null, result.rows[0]);
   } catch (err) {
-    done(err, null);
+    done(err);
   }
 });
+
 
 // ================= GOOGLE STRATEGY =================
 passport.use(

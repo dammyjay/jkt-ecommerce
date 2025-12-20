@@ -1,38 +1,40 @@
 <div class="admin-container">
   <h2>All Users</h2>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Full Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% users.forEach(user => { %>
+    <div class="table-container">
+      <table class="table">
+        <thead>
           <tr>
-            <td data-label="ID"><%= user.id %></td>
-            <td data-label="Name"><%= user.fullname %></td>
-            <td data-label="Email"><%= user.email %></td>
-            <td data-label="Role"><%= user.role %></td>
-            <td data-label="Actions">
-              <button 
-                class="btn edit-btn"
-                onclick="openEditModal('<%= user.id %>', '<%= user.fullname %>', '<%= user.email %>', '<%= user.role %>')">
-                Edit
-              </button>
-
-              <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;">
-                <button type="submit" class="btn delete-btn">Delete</button>
-              </form>
-            </td>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
           </tr>
-        <% }) %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr>
+              <td data-label="ID"><%= user.id %></td>
+              <td data-label="Name"><%= user.fullname %></td>
+              <td data-label="Email"><%= user.email %></td>
+              <td data-label="Role"><%= user.role %></td>
+              <td data-label="Actions">
+                <button 
+                  class="btn-edit"
+                  onclick="openEditModal('<%= user.id %>', '<%= user.fullname %>', '<%= user.email %>', '<%= user.role %>')">
+                  Edit
+                </button>
+
+                <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;">
+                  <button type="submit" class="btn-delete">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
 </div>
 
 <!-- 🧩 Edit User Modal -->

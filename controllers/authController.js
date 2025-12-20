@@ -132,50 +132,79 @@ const verifyOtp = async (req, res) => {
 
 
 // ================== LOGIN ==================
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Admin login
+    // 🔐 Admin login
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       req.session.user = { fullname: "Admin", email, role: "admin" };
-      return res.redirect("/admin/dashboard");
+
+      return res.json({
+        success: true,
+        role: "admin"
+      });
     }
 
-    // Regular user login
-    const result = await pool.query("SELECT * FROM users2 WHERE email=$1", [email]);
+    // 👤 Regular user
+    const result = await pool.query(
+      "SELECT * FROM users2 WHERE email=$1",
+      [email]
+    );
+
     if (result.rowCount === 0) {
-      return res.render("public/login", { message: "No user found", user: null });
+      return res.status(401).json({
+        success: false,
+        message: "No user found"
+      });
     }
 
     const user = result.rows[0];
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      return res.render("public/login", { message: "Incorrect password", user: null });
-    }
-
-    if (!user.is_verified) {
-      return res.render("public/verifyOtp", {
-        email,
-        message: "Please verify your account first",
-        user: null,
+      return res.status(401).json({
+        success: false,
+        message: "Incorrect password"
       });
     }
 
-    req.session.user = user;
-
-    // Redirect by role
-    if (user.role === "admin") {
-      res.redirect("/admin/dashboard");
-    } else {
-      res.redirect("/");
+    // 🚨 Not verified → frontend opens OTP modal
+    if (!user.is_verified) {
+      return res.status(403).json({
+        needsVerification: true,
+        email: user.email
+      });
     }
+
+    // ✅ Verified user
+    req.session.user = {
+      id: user.id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      address: user.address,
+      city: user.city,
+      state: user.state,
+      profile_image: user.profile_image
+    };
+
+    return res.json({
+      success: true,
+      role: user.role
+    });
+
   } catch (error) {
     console.error("Login Error:", error);
-    res.render("public/login", { message: "Login failed, please try again.", user: null });
+    return res.status(500).json({
+      success: false,
+      message: "Login failed, please try again"
+    });
   }
 };
+
 
 // ================== LOGOUT ==================
 const logout = (req, res) => {

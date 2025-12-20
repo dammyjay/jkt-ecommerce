@@ -13,12 +13,13 @@
   <p><strong>Address:</strong> <%= user.address || 'Not added' %></p><br>
   <p><strong>City:</strong> <%= user.city || 'Not added' %></p><br>
   <p><strong>State:</strong> <%= user.state || 'Not added' %></p><br>
+  <p><strong>State:</strong> <%= user.role || 'Not added' %></p><br>
 
   <button id="editBtn" class="btn-edit">Edit Profile</button>
 </div>
 
 <!-- Edit Profile Modal -->
-<div id="editModal" class="modal">
+<div id="editModal" class="modal" style="display: none;">
   <div class="modal-content">
     <span id="closeModal">&times;</span>
     <h3>Edit Profile</h3>

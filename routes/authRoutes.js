@@ -84,9 +84,27 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }), // ✅ fixed redirect path
-  (req, res) => {
-    res.redirect("/"); // ✅ redirect user to profile or homepage after login
+   (req, res) => {
+    // Set session manually
+    req.session.user = {
+      id: req.user.id,
+      fullname: req.user.fullname,
+      email: req.user.email,
+      role: req.user.role, // important for admin
+      phone: req.user.phone,
+      address: req.user.address,
+      city: req.user.city,
+      state: req.user.state,
+      profile_image: req.user.profile_image
+    };
+    
+    // Redirect based on role
+    if (req.user.role === "admin") {
+      return res.redirect("/admin/dashboard");
+    }
+    res.redirect("/");
   }
+
 );
 
 // ---------- FACEBOOK OAUTH ----------
@@ -98,9 +116,27 @@ router.get(
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", { failureRedirect: "/login" }), // ✅ fixed
-  (req, res) => {
+   (req, res) => {
+    // Set session manually
+    req.session.user = {
+      id: req.user.id,
+      fullname: req.user.fullname,
+      email: req.user.email,
+      role: req.user.role, // important for admin
+      phone: req.user.phone,
+      address: req.user.address,
+      city: req.user.city,
+      state: req.user.state,
+      profile_image: req.user.profile_image
+    };
+    
+    // Redirect based on role
+    if (req.user.role === "admin") {
+      return res.redirect("/admin/dashboard");
+    }
     res.redirect("/");
   }
+
 );
 
 // ---------- LINKEDIN OAUTH ----------
@@ -109,9 +145,27 @@ router.get("/linkedin", passport.authenticate("linkedin", { state: true }));
 router.get(
   "/linkedin/callback",
   passport.authenticate("linkedin", { failureRedirect: "/login" }), // ✅ fixed
-  (req, res) => {
+   (req, res) => {
+    // Set session manually
+    req.session.user = {
+      id: req.user.id,
+      fullname: req.user.fullname,
+      email: req.user.email,
+      role: req.user.role, // important for admin
+      phone: req.user.phone,
+      address: req.user.address,
+      city: req.user.city,
+      state: req.user.state,
+      profile_image: req.user.profile_image
+    };
+    
+    // Redirect based on role
+    if (req.user.role === "admin") {
+      return res.redirect("/admin/dashboard");
+    }
     res.redirect("/");
   }
+
 );
 
 module.exports = router;

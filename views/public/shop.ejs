@@ -14,10 +14,10 @@
     <% products.forEach(product => { %>
       <div class="product-card" data-category="<%= product.category_id %>">
         <img src="<%= product.image_url %>" alt="<%= product.name %>">
-        <h3><%= product.name %></h3>
+        <h4><%= product.name %></h4>
         <p><%= product.category_name %></p>
         <p>₦<%= product.price.toLocaleString() %></p>
-        <a href="/products/<%= product.id %>" class="btn-view">View Details</a>
+        <a href="/products/<%= product.id %>" class="btn">View Details</a>
       </div>
     <% }) %>
   </div>

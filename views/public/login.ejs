@@ -16,6 +16,11 @@
             required
           />
         </div>
+        <div style="width: 100%; text-align: left; margin-bottom: 15px;">
+          <input type="checkbox" id="showPassword" onclick="togglePassword()" />
+          Show Password <br /><br /> 
+        </div>
+         
 
         <button type="submit" class="btn">Login</button>
       </form>
@@ -35,3 +40,14 @@
     </div>
   </div>
 </section>
+
+<script>
+  function togglePassword() {
+    const passwordField = document.querySelector('input[name="password"]');
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+    } else {
+      passwordField.type = "password";
+    }
+  }
+</script>

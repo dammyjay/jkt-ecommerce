@@ -3,22 +3,88 @@
 <div class="admin-container">
   <h1>🧑‍💼 Manage Products</h1>
 
-  <!-- ✅ Add Product Form -->
-  <form action="/products/admin/create" method="POST" class="add-product-form">
-    <input type="text" name="name" placeholder="Product Name" required>
-    <input type="text" name="description" placeholder="Description" required>
-    <input type="number" step="0.01" name="price" placeholder="Price" required>
-    <input type="number" name="stock" placeholder="Stock" required>
-    <button type="submit" class="btn">Add Product</button>
-  </form>
+   <div class="page-header">
+    <button class="btn-primary" onclick="openCreateModal()">➕ Upload Product</button>
+    <button class="btn-secondary" onclick="openCategoryModal()">➕ Add Category</button>
+  </div>
+
+  <!-- 🧩 Create Product Modal -->
+  <div id="createModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeCreateModal()">&times;</span>
+      <h2>Upload New Product</h2>
+
+      <form 
+        action="/products/admin/create" 
+        method="POST" 
+        enctype="multipart/form-data"
+        class="modal-form"
+      >
+        <label>Product Name</label>
+        <input type="text" name="name" required>
+
+        <label>Product Image</label>
+        <input type="file" name="image" accept="image/*" onchange="previewCreateImage(event)">
+        <img id="createPreview" class="image-preview">
+
+        <label>Description</label>
+        <textarea name="description" required></textarea>
+
+        <label>Category</label>
+        <select name="category_id" required>
+          <option value="">Select Category</option>
+          <% categories.forEach(category => { %>
+            <option value="<%= category.id %>">
+              <%= category.name %>
+            </option>
+          <% }) %>
+        </select>
+
+
+        <label>Price (₦)</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Stock</label>
+        <input type="number" name="stock" required>
+
+        <button type="submit" class="btn-primary full">Upload Product</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="categoryModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeCategoryModal()">&times;</span>
+      <h2>Upload New Product</h2>
+      <form 
+        action="/admin/categories/create" 
+        method="POST"
+        style="margin-bottom: 20px;"
+      >
+        <input 
+          type="text" 
+          name="name" 
+          placeholder="New Category Name" 
+          required
+        >
+        <button type="submit" class="btn-primary">
+          Create Category
+        </button>
+      </form>
+    </div>
+  </div>
+
+
 
   <!-- ✅ Product Table -->
   <table class="product-table">
     <thead>
       <tr>
         <th>ID</th>
+        <th>Image</th>
         <th>Name</th>
         <th>Description</th>
+        <th>Category</th>
         <th>Price</th>
         <th>Stock</th>
         <th>Actions</th>
@@ -28,19 +94,29 @@
       <% products.forEach(product => { %>
         <tr>
           <td><%= product.id %></td>
+          <td>
+            <% if (product.image_url) { %>
+              <img src="<%= product.image_url %>" alt="<%= product.name %>" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
+            <% } else { %>
+              N/A
+            <% } %>
           <td><%= product.name %></td>
           <td><%= product.description %></td>
+          <td><%= product.category_name || 'Uncategorized' %></td>
           <td>₦<%= product.price %></td>
           <td><%= product.stock %></td>
-          <td>
+          <td style="display: flex; gap: 10px; justify-content: center;">
+            <button class="btn-edit" onclick='openEditModal(<%- JSON.stringify(product) %>)'>Edit</button>
+
             <button 
-              class="btn-edit" 
-              onclick="openEditModal('<%= product.id %>', '<%= product.name %>', '<%= product.description %>', '<%= product.price %>', '<%= product.stock %>')">
-              Edit
+              type="button"
+              class="btn-delete"
+              onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')"
+            >
+              Delete
             </button>
-            <form action="/products/admin/<%= product.id %>/delete" method="POST" class="inline-form">
-              <button type="submit" class="btn-delete">Delete</button>
-            </form>
+
+
           </td>
         </tr>
       <% }) %>
@@ -48,41 +124,139 @@
   </table>
 </div>
 
-<!-- 🧩 Edit Modal -->
-<div id="editModal" class="modal">
+
+<!-- 🧩 Edit Product Modal -->
+<div id="editModal" class="modal" style="display: none;">
   <div class="modal-content">
     <span class="close" onclick="closeEditModal()">&times;</span>
     <h2>Edit Product</h2>
-    <form id="editForm" method="POST">
+
+    <form 
+      id="editForm" 
+      method="POST" 
+      enctype="multipart/form-data"
+      class="modal-form"
+    >
+      <label>Product Name</label>
       <input type="text" name="name" id="editName" required>
-      <input type="text" name="description" id="editDescription" required>
+
+      <label>Change Image</label>
+      <input type="file" name="image" accept="image/*" onchange="previewEditImage(event)">
+      <img id="editPreview" class="image-preview">
+
+      <label>Description</label>
+      <textarea name="description" id="editDescription" required></textarea>
+
+      <select name="category_id" id="editCategory">
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat.id %>"><%= cat.name %></option>
+        <% }) %>
+      </select>
+
+
+      <label>Price (₦)</label>
       <input type="number" step="0.01" name="price" id="editPrice" required>
+
+      <label>Stock</label>
       <input type="number" name="stock" id="editStock" required>
-      <button type="submit" class="btn">Update Product</button>
+
+      <button type="submit" class="btn-primary full">Update Product</button>
+    </form>
+  </div>
+</div>
+
+<!-- ❌ Delete Confirmation Modal -->
+<div id="deleteModal" class="modal" style="display: none;">
+  <div class="modal-content delete-modal">
+    <span class="close" onclick="closeDeleteModal()">&times;</span>
+
+    <h3>Delete Product</h3>
+    <p>
+      Are you sure you want to delete  
+      <strong id="deleteProductName"></strong>?
+    </p>
+
+    <form id="deleteForm" method="POST">
+      <button type="button" class="btn-cancel" onclick="closeDeleteModal()">
+        Cancel
+      </button>
+      <button type="submit" class="btn-danger">
+        Yes, Delete
+      </button>
     </form>
   </div>
 </div>
 
 <script>
-  const modal = document.getElementById("editModal");
+  const createModal = document.getElementById("createModal");
+  const editModal = document.getElementById("editModal");
 
-  function openEditModal(id, name, description, price, stock) {
-    modal.style.display = "block";
-    document.getElementById("editName").value = name;
-    document.getElementById("editDescription").value = description;
-    document.getElementById("editPrice").value = price;
-    document.getElementById("editStock").value = stock;
-    document.getElementById("editForm").action = `/products/admin/${id}/update`;
+  function openCreateModal() {
+    createModal.style.display = "flex";
   }
+
+  function closeCreateModal() {
+    createModal.style.display = "none";
+  }
+
+  function openCategoryModal() {
+    categoryModal.style.display = "flex";
+  }
+
+  function closeCategoryModal() {
+    categoryModal.style.display = "none";
+  }
+
+  function openEditModal(product) {
+    const editModal = document.getElementById("editModal");
+    editModal.style.display = "flex";
+
+    document.getElementById("editName").value = product.name;
+    document.getElementById("editDescription").value = product.description;
+    document.getElementById("editCategory").value = product.category_id;
+    document.getElementById("editPrice").value = product.price;
+    document.getElementById("editStock").value = product.stock;
+    document.getElementById("editPreview").src = product.image_url || "";
+    document.getElementById("editForm").action = `/products/admin/${product.id}/update`;
+}
+
 
   function closeEditModal() {
-    modal.style.display = "none";
+    editModal.style.display = "none";
   }
 
-  window.onclick = function(event) {
-    if (event.target === modal) closeEditModal();
+  function previewCreateImage(event) {
+    document.getElementById("createPreview").src =
+      URL.createObjectURL(event.target.files[0]);
+  }
+
+  function previewEditImage(event) {
+    document.getElementById("editPreview").src =
+      URL.createObjectURL(event.target.files[0]);
+  }
+
+  const deleteModal = document.getElementById("deleteModal");
+
+  function openDeleteModal(id, name) {
+    deleteModal.style.display = "flex";
+    document.getElementById("deleteProductName").textContent = name;
+    document.getElementById("deleteForm").action =
+      `/products/admin/${id}/delete`;
+  }
+
+  function closeDeleteModal() {
+    deleteModal.style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    if (event.target === createModal) closeCreateModal();
+    if (event.target === editModal) closeEditModal();
+    if (event.target === deleteModal) {
+      closeDeleteModal();
+    }
   };
 </script>
+
 
 <style>
   .admin-container {
@@ -102,20 +276,29 @@
     border: 1px solid #ccc;
   }
   .product-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .product-table th, .product-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+}
+
+.product-table th,
+.product-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.product-table th {
+  background-color: #f4f4f4;
+}
   .btn-edit {
     background-color: #4CAF50;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    width: 100%;
   }
   .btn-delete {
     background-color: #e74c3c;
@@ -123,12 +306,13 @@
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    width: 100%;
   }
   .inline-form {
     display: inline;
   }
   /* Modal Styling */
-  .modal {
+  /* .modal {
     display: none;
     position: fixed;
     z-index: 100;
@@ -142,7 +326,7 @@
     padding: 20px;
     width: 50%;
     border-radius: 8px;
-  }
+  } */
   .close {
     float: right;
     font-size: 24px;
@@ -152,6 +336,31 @@
     .add-product-form { flex-direction: column; }
     .modal-content { width: 90%; }
   }
+
+  
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .add-product-form { flex-direction: column; }
+  .modal-content { width: 70%; }
+}
+
+@media (max-width: 768px) {
+  .modal-content { width: 90%; }
+  .product-table th,
+  .product-table td { font-size: 14px; padding: 8px; }
+  .add-product-form input,
+  .add-product-form select,
+  .add-product-form button,
+  .add-product-form textarea { font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+  .add-product-form input,
+  .add-product-form select,
+  .add-product-form button,
+  .add-product-form textarea { flex: 1 1 100%; }
+  .btn-edit, .btn-delete { padding: 5px; font-size: 12px; }
+}
 </style>
 
 

@@ -1,0 +1,18 @@
+<div class="product-detail-container">
+  <div class="product-images">
+    <img id="mainImage" src="<%= product.image_url %>" alt="<%= product.name %>">
+  </div>
+
+  <div class="product-info">
+    <h1><%= product.name %></h1>
+    <p class="category">Category: <%= product.category_name %></p>
+    <p class="price">₦<%= product.price.toLocaleString() %></p>
+    <p class="description"><%= product.description %></p>
+
+    <form id="addToCartForm" method="POST" action="/cart/add/<%= product.id %>">
+      <label for="quantity">Quantity:</label>
+      <input type="number" name="quantity" id="quantity" value="1" min="1">
+      <button type="submit" class="btn-add-cart">Add to Cart</button>
+    </form>
+  </div>
+</div>

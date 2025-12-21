@@ -7,7 +7,8 @@
     <h1><%= product.name %></h1>
     <p class="category">Category: <%= product.category_name %></p>
     <p class="price">₦<%= product.price.toLocaleString() %></p>
-    <p class="description"><%= product.description %></p>
+    <p class="description"><%- product.description %></p>
+
 
     <form id="addToCartForm" method="POST" action="/cart/add/<%= product.id %>">
       <label for="quantity">Quantity:</label>

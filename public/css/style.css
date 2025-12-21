@@ -49,6 +49,12 @@ textarea {
   line-height: 1.4; /* match body spacing */
 }
 
+.ck-editor__editable {
+  min-height: 150px;
+  font-size: 0.95rem;
+}
+
+
 
 /* ========== CONTAINER ========== */
 .container {
@@ -917,6 +923,7 @@ margin-bottom: 30px;
 
 .product-info {
   flex: 1 1 400px;
+  text-align: left;
 }
 
 .product-info h1 {

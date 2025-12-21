@@ -28,7 +28,7 @@
         <img id="createPreview" class="image-preview">
 
         <label>Description</label>
-        <textarea name="description" required></textarea>
+        <textarea name="description" id="createDescription"></textarea>
 
         <label>Category</label>
         <select name="category_id" required>
@@ -147,7 +147,7 @@
       <img id="editPreview" class="image-preview">
 
       <label>Description</label>
-      <textarea name="description" id="editDescription" required></textarea>
+      <textarea name="description" id="editDescription"></textarea>
 
       <select name="category_id" id="editCategory">
         <% categories.forEach(cat => { %>
@@ -189,6 +189,66 @@
   </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+<!-- Script for CKEditor -->
+ <script>
+let createEditor;
+let editEditor;
+
+// Create product editor
+ClassicEditor
+  .create(document.querySelector('#createDescription'), {
+    placeholder: 'Write product description...',
+    toolbar: [
+      'heading', '|',
+      'bold', 'italic', 'link',
+      'bulletedList', 'numberedList',
+      'blockQuote', '|',
+      'undo', 'redo'
+    ]
+  })
+  .then(editor => {
+    createEditor = editor;
+  })
+  .catch(error => console.error(error));
+
+// Edit product editor
+ClassicEditor
+  .create(document.querySelector('#editDescription'), {
+    placeholder: 'Edit product description...',
+    toolbar: [
+      'heading', '|',
+      'bold', 'italic', 'link',
+      'bulletedList', 'numberedList',
+      'blockQuote', '|',
+      'undo', 'redo'
+    ]
+  })
+  .then(editor => {
+    editEditor = editor;
+  })
+  .catch(error => console.error(error));
+</script>
+
+<script>
+/* CREATE PRODUCT FORM */
+document.querySelector('#createModal form').addEventListener('submit', function () {
+  if (createEditor) {
+    document.getElementById('createDescription').value = createEditor.getData();
+  }
+});
+
+/* EDIT PRODUCT FORM */
+document.getElementById('editForm').addEventListener('submit', function () {
+  if (editEditor) {
+    document.getElementById('editDescription').value = editEditor.getData();
+  }
+});
+</script>
+
+
+<!-- Script for modals create and edit and delete -->
 <script>
   const createModal = document.getElementById("createModal");
   const editModal = document.getElementById("editModal");
@@ -214,7 +274,8 @@
     editModal.style.display = "flex";
 
     document.getElementById("editName").value = product.name;
-    document.getElementById("editDescription").value = product.description;
+    // document.getElementById("editDescription").value = product.description;
+    editEditor.setData(product.description || '');
     document.getElementById("editCategory").value = product.category_id;
     document.getElementById("editPrice").value = product.price;
     document.getElementById("editStock").value = product.stock;
@@ -258,6 +319,7 @@
     }
   };
 </script>
+
 
 
 <style>

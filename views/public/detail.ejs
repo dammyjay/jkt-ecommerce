@@ -17,3 +17,49 @@
     </form>
   </div>
 </div>
+
+<!-- Notification Modal -->
+<div id="cartNotification" class="modal-notification" style="display:none;">
+  <div class="modal-content">
+    <p id="cartMessage"></p>
+    <div class="modal-actions">
+      <button onclick="closeCartNotification()" class="btn-close">Continue Shopping</button>
+      <a href="/cart" class="btn-view-cart">View Cart</a>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const addToCartForm = document.getElementById("addToCartForm");
+const notification = document.getElementById("cartNotification");
+const cartMessage = document.getElementById("cartMessage");
+
+function closeCartNotification() {
+  notification.style.display = "none";
+}
+
+addToCartForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(addToCartForm);
+  const quantity = formData.get("quantity");
+
+  const res = await fetch(addToCartForm.action, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ quantity })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    cartMessage.textContent = data.message;
+    notification.style.display = "flex";
+
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      notification.style.display = "none";
+    }, 3000);
+  }
+});
+</script>

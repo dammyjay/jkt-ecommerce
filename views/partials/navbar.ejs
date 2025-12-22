@@ -22,7 +22,11 @@
       <% } else if (user) { %>
         <a href="/">Home</a>
         <a href="/products">Shop</a>
-        <a href="/cart">Cart</a>
+        <!-- <a href="/cart">Cart</a> -->
+         <a href="/cart">
+            Cart (<%= cartQty %>)
+          </a>
+
         <a href="/orders">My Orders</a>
         <div class="nav-profile">
           <a href="/users/profile" class="profile-link">

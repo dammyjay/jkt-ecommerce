@@ -82,6 +82,7 @@ app.use((req, res, next) => {
   res.locals.ogImage = "/images/JKT logo bg.png";
   res.locals.description = "Shop quality products at JKT E-Commerce";
   res.locals.keywords = "ecommerce, shop, jkt";
+  res.locals.cartQty = req.session.cart?.totalQty || 0;
   next();
 });
 
@@ -100,12 +101,13 @@ const categoryRoutes = require("./routes/categoryRoutes");
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);  // user-facing product routes
 app.use("/orders", orderRoutes);      // user-facing orders
-// app.use("/cart", cartRoutes);
+app.use("/cart", cartRoutes);
 
 // ADMIN ROUTES
 app.use("/admin", adminRoutes);
 app.use("/users", userRoutes);
 app.use("/", categoryRoutes);
+
 
 
 

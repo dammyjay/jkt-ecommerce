@@ -1,0 +1,54 @@
+<div class="checkout-container">
+  <h1>Checkout</h1>
+
+  <div class="checkout-grid">
+    <!-- Shipping Details -->
+    <div class="checkout-section">
+      <h3>Shipping Address</h3>
+      <form id="checkoutForm" method="POST" action="/cart/checkout">
+        <label>Full Name</label>
+        <input type="text" name="fullname" value="<%= user.fullname || '' %>" required>
+
+        <label>Email</label>
+        <input type="email" name="email" value="<%= user.email || '' %>" required>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone" value="<%= user.phone || '' %>" required>
+
+        <label>Address</label>
+        <textarea name="address" rows="3" required><%= user.address || '' %></textarea>
+
+        <label>City</label>
+        <input type="text" name="city" value="<%= user.city || '' %>" required>
+
+        <label>State</label>
+        <input type="text" name="state" value="<%= user.state || '' %>" required>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="checkout-section">
+      <h3>Order Summary</h3>
+      <ul class="order-items">
+        <% cart.items.forEach(item => { %>
+          <li>
+            <span><%= item.name %> x <%= item.quantity %></span>
+            <span>₦<%= (item.price * item.quantity).toLocaleString() %></span>
+          </li>
+        <% }) %>
+      </ul>
+      <hr>
+      <h3>Total: ₦<%= cart.totalPrice.toLocaleString() %></h3>
+
+      <h3>Payment Option</h3>
+      <select name="payment_method" required>
+        <option value="">Select Payment</option>
+        <option value="paystack">Paystack</option>
+        <option value="paypal">PayPal</option>
+        <option value="stripe">Stripe</option>
+      </select>
+
+      <button type="submit" class="btn btn-checkout">Place Order</button>
+      </form>
+    </div>
+  </div>
+</div>

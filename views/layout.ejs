@@ -20,6 +20,10 @@
   <meta property="og:description" content="<%= description || 'JKT E-Commerce online store' %>">
   <meta property="og:type" content="website">
 
+  <meta property="og:url" content="<%= typeof currentUrl !== 'undefined' ? currentUrl : '' %>">
+<meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : '/images/JKT logo bg.png' %>">
+
+
 
 </head>
 <body>

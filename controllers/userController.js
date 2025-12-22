@@ -19,7 +19,12 @@ exports.getProfile = async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    res.render("public/profile", { user }); // your ejs file for profile
+    res.render("public/profile", { user,
+      title: "Profile | JKT E-Commerce",
+      description: "Shop quality products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce",
+      ogImage: "/images/JKT logo bg.png",
+     }); // your ejs file for profile
   } catch (error) {
     console.error("❌ Error loading profile:", error);
     res.status(500).send("Server error");
@@ -76,7 +81,8 @@ exports.getAllUsers = async (req, res) => {
     );
     res.render("admin/users", { users: result.rows, user: req.session.user, title: "Users | JKT E-Commerce",
       description: "Manage users on JKT E-Commerce",
-      keywords: "online shopping, jkt, ecommerce", });
+      keywords: "online shopping, jkt, ecommerce", 
+      ogImage: "/images/JKT logo bg.png",  });
   } catch (err) {
     console.error("Error fetching users:", err);
     res.status(500).send("Server error");

@@ -78,6 +78,10 @@ app.use((req, res, next) => {
 // Default page title
 app.use((req, res, next) => {
   res.locals.title = "JKT E-Commerce";
+  res.locals.currentUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  res.locals.ogImage = "/images/JKT logo bg.png";
+  res.locals.description = "Shop quality products at JKT E-Commerce";
+  res.locals.keywords = "ecommerce, shop, jkt";
   next();
 });
 
@@ -108,7 +112,10 @@ app.use("/", categoryRoutes);
 
 // 🏠 HOME ROUTE
 app.get("/", (req, res) => {
-  res.render("public/home", { title: "Welcome to JKT E-Commerce" });
+  res.render("public/home", { title: "Home | JKT E-Commerce", 
+    description: "Shop quality products at affordable prices on JKT E-Commerce", 
+    keywords: "online shopping, jkt, ecommerce",
+    ogImage: "/images/JKT logo bg.png",});
 });
 
 // const userRoutes = require("./routes/userRoutes");

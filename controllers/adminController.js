@@ -14,6 +14,7 @@ exports.getDashboard = async (req, res) => {
       title: "Dashboard | JKT E-Commerce",
       description: "Shop quality products at affordable prices on JKT E-Commerce",
       keywords: "online shopping, jkt, ecommerce",
+      ogImage: "/images/JKT logo bg.png",
       user: req.session.user,
       stats: {
         totalProducts: totalProducts.rows[0].count,
@@ -50,7 +51,10 @@ exports.getProfile = async (req, res) => {
       user,
       title: "Profile | JKT E-Commerce",
       description: "Shop quality products at affordable prices on JKT E-Commerce",
-      keywords: "online shopping, jkt, ecommerce" }); // your ejs file for profile
+      keywords: "online shopping, jkt, ecommerce",
+      ogImage: "/images/JKT logo bg.png",
+     }); // your ejs file for profile
+      
   } catch (error) {
     console.error("❌ Error loading profile:", error);
     res.status(500).send("Server error");

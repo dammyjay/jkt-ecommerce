@@ -2,40 +2,6 @@ const pool = require("../utils/db");
 const cloudinary = require("../utils/cloudinary");
 
 // 🛍️ Show all products (for users)
-// exports.getAllProducts = async (req, res) => {
-//   try {
-//     const result = await pool.query(
-//       "SELECT * FROM products ORDER BY created_at DESC"
-//     );
-//     res.render("products/list", {
-//       products: result.rows,
-//       user: req.session.user,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching products:", error);
-//     res.status(500).send("Server error");
-//   }
-// };
-
-// exports.getAllProducts = async (req, res) => {
-//   const products = await pool.query(`
-//     SELECT products.*, categories.name AS category_name
-//     FROM products
-//     LEFT JOIN categories ON products.category_id = categories.id
-//     ORDER BY products.created_at DESC
-//   `);
-
-//   const categories = await pool.query(
-//     "SELECT * FROM categories ORDER BY name ASC"
-//   );
-
-//   res.render("admin/products", {
-//     products: products.rows,
-//     categories: categories.rows
-//   });
-// };
-
-// 🛍️ Show all products (for users)
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await pool.query(`
@@ -50,6 +16,10 @@ exports.getAllProducts = async (req, res) => {
     );
 
     res.render("public/shop", {
+      title: "Product | JKT E-Commerce",
+      description: "View products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce",
+      image: "/images/JKT logo bg.png",
       products: products.rows,
       categories: categories.rows,
       user: req.session.user
@@ -60,18 +30,6 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-
-
-// 🧑‍💼 ADMIN: Get all products
-// exports.getAllProductsAdmin = async (req, res) => {
-//   try {
-//     const result = await pool.query("SELECT * FROM products ORDER BY id DESC");
-//     res.render("admin/products", { products: result.rows, user: req.session.user });
-//   } catch (err) {
-//     console.error("Error fetching products:", err);
-//     res.status(500).send("Server error");
-//   }
-// };
 
 // 🧑‍💼 ADMIN: Get all products
 exports.getAllProductsAdmin = async (req, res) => {
@@ -89,8 +47,9 @@ exports.getAllProductsAdmin = async (req, res) => {
 
     res.render("admin/products", {
       title: "Product | JKT E-Commerce",
-      description: "Manage products at affordable prices on JKT E-Commerce",
+      description: "Manage products on JKT E-Commerce",
       keywords: "online shopping, jkt, ecommerce",
+      image: "/images/JKT logo bg.png",
       products: products.rows,
       categories: categories.rows,
       user: req.session.user
@@ -162,52 +121,43 @@ exports.deleteProduct = async (req, res) => {
 };
 
 
-// exports.getProductById = async (req, res) => {
-//   const id = parseInt(req.params.id);
-//   if (isNaN(id)) return res.status(400).send("Invalid product ID");
-
-//   try {
-//     const result = await pool.query("SELECT * FROM products WHERE id = $1", [id]); // ✅ use parsed id
-//     if (result.rows.length === 0) {
-//       return res.status(404).send("Product not found");
-//     }
-
-//     res.render("products/detail", {
-//       product: result.rows[0],
-//       user: req.session.user,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching product:", error);
-//     res.status(500).send("Server error");
-//   }
-// };
-
 exports.getProductById = async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) return res.status(400).send("Invalid product ID");
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT products.*, categories.name AS category_name
       FROM products
       LEFT JOIN categories ON products.category_id = categories.id
       WHERE products.id = $1
-    `, [id]);
+      `,
+      [id]
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).send("Product not found");
     }
 
+    const product = result.rows[0];
+
     res.render("public/detail", {
-      product: result.rows[0],
+      product,
       user: req.session.user,
-      title: "Product Detail | JKT E-Commerce",
-    description: "Shop quality products at affordable prices on JKT E-Commerce",
-    keywords: "online shopping, jkt, ecommerce"
+
+      // ✅ Dynamic SEO
+      title: `${product.name} | JKT E-Commerce`,
+      description: product.description
+        ? product.description.substring(0, 160)
+        : `Buy ${product.name} at the best price on JKT E-Commerce`,
+      keywords: `${product.name}, ${product.category_name || "products"}, online shopping, JKT`,
+      ogImage: product.image_url,
+
     });
+
   } catch (error) {
     console.error("Error fetching product:", error);
     res.status(500).send("Server error");
   }
 };
-

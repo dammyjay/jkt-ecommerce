@@ -1,5 +1,7 @@
 
 
+
+<!-- 
 <section class="auth-section">
   <div class="auth-container">
     <div class="auth-box">
@@ -144,5 +146,186 @@ function togglePassword() {
   const field = document.getElementById("loginPassword");
   field.type = field.type === "password" ? "text" : "password";
 }
-</script>
+</script> -->
 
+
+<section>
+  <div class="container" style="max-width: 420px; margin-top: 80px;">
+    <div class="card">
+      <h2>Welcome Back</h2>
+
+      <form id="loginForm">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          id="loginEmail"
+          class="input"
+          placeholder="Email"
+          required
+        />
+        <br>
+
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          id="loginPassword"
+          class="input"
+          placeholder="Password"
+          required
+        />
+        <br>
+
+        <label style="display: flex; align-items: center; gap: 6px; margin: 10px 0;">
+          <input type="checkbox" onclick="togglePassword()" />
+          Show Password
+        </label>
+        
+
+        <button type="submit" class="btn btn-primary btn-full">
+          Login
+        </button>
+      </form>
+
+      <hr style="margin: 20px 0;" />
+
+      <p style="text-align: center;">Or continue with</p>
+
+      <div style="display: grid; gap: 10px;">
+        <a href="/auth/google" class="btn btn-secondary btn-full" style="background-color: red;">Google</a>
+        <a href="/auth/facebook" class="btn btn-secondary btn-full" style="background-color: rgb(0, 4, 255);">Facebook</a>
+        <a href="/auth/linkedin" class="btn btn-secondary btn-full" style="background-color: #0077b5;">LinkedIn</a>
+      </div>
+
+      <p style="margin-top: 15px; text-align: center;">
+        Don’t have an account?
+        <a href="/auth/signup">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<div id="otpModal" class="modal">
+  <div class="modal-box center small">
+    <h3>Email Verification</h3>
+    <p>Please enter the OTP sent to your email.</p>
+
+    <form id="otpForm">
+      <input
+        type="email"
+        id="otpEmail"
+        class="input"
+        readonly
+      />
+
+      <input
+        type="text"
+        name="otp"
+        maxlength="6"
+        class="input"
+        placeholder="Enter OTP"
+        required
+      />
+
+      <button type="submit" class="btn btn-primary btn-full">
+        Verify
+      </button>
+    </form>
+
+    <button
+      class="btn btn-secondary btn-full"
+      style="margin-top: 10px;"
+      id="closeOtp"
+    >
+      Cancel
+    </button>
+
+    <p id="otpMessage"></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+const loginForm = document.getElementById("loginForm");
+const otpModal = document.getElementById("otpModal");
+const otpEmail = document.getElementById("otpEmail");
+const otpForm = document.getElementById("otpForm");
+const otpMessage = document.getElementById("otpMessage");
+
+// 🔐 Login submit
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  const res = await fetch("/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  // ❌ General error
+  if (!res.ok && !data.needsVerification) {
+    Swal.fire("Login Failed", data.message || "Invalid login", "error");
+    return;
+  }
+
+  // 🚨 Not verified → show OTP modal
+  if (data.needsVerification) {
+    otpEmail.value = data.email;
+    otpModal.classList.add("active");
+    return;
+  }
+
+  // ✅ Successful login
+  if (data.success) {
+    if (data.role === "admin") {
+      window.location.href = "/admin/dashboard";
+    } else {
+      window.location.href = "/";
+    }
+  }
+});
+
+
+// 🔐 OTP submit
+otpForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const otp = otpForm.otp.value;
+  const email = otpEmail.value;
+
+  const res = await fetch("/auth/verifyOtp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    Swal.fire("Verified!", "You can now log in.", "success");
+    setTimeout(() => window.location.reload(), 1500);
+  } else {
+    otpMessage.style.color = "red";
+    otpMessage.textContent = data.message;
+  }
+});
+
+// Close modal
+document.getElementById("closeOtp").onclick = () => {
+  otpModal.classList.remove("active");
+};
+
+// Show password
+function togglePassword() {
+  const field = document.getElementById("loginPassword");
+  field.type = field.type === "password" ? "text" : "password";
+}
+</script>

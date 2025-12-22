@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="admin-dashboard">
   <h1>Welcome, <%= user.full_name %> 👋</h1>
   <p>Here’s your store overview:</p>
@@ -26,11 +26,70 @@
   <a href="/admin/products" class="btn"><i class="fa fa-box"></i> Manage Products</a>
   <a href="/admin/orders" class="btn"><i class="fa fa-shopping-cart"></i> Manage Orders</a>
   <a href="/admin/users" class="btn"><i class="fa fa-users"></i> Manage Users</a>
+</div> -->
+
+<div class="admin-dashboard container" style="margin-top: var(--s-lg);">
+
+  <h1 style="font-size: 2rem; margin-bottom: var(--s-sm);">
+    Welcome, <%= user.fullname %> 👋
+  </h1>
+  <p style="color: var(--muted); margin-bottom: var(--s-md);">
+    Here’s your store overview:
+  </p>
+
+  <div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-md); margin-top: var(--s-md);">
+    
+    <div class="card">
+      <i class="fa fa-box" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--s-xs);"></i>
+      <h2 style="color: var(--text); font-size: 2rem; margin-bottom: var(--s-xs);">
+        <%= stats.totalProducts %>
+      </h2>
+      <p style="color: var(--muted); font-size: 1rem;">Products</p>
+    </div>
+
+    <div class="card">
+      <i class="fa fa-shopping-cart" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--s-xs);"></i>
+      <h2 style="color: var(--text); font-size: 2rem; margin-bottom: var(--s-xs);">
+        <%= stats.totalOrders %>
+      </h2>
+      <p style="color: var(--muted); font-size: 1rem;">Orders</p>
+    </div>
+
+    <div class="card">
+      <i class="fa fa-users" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--s-xs);"></i>
+      <h2 style="color: var(--text); font-size: 2rem; margin-bottom: var(--s-xs);">
+        <%= stats.totalUsers %>
+      </h2>
+      <p style="color: var(--muted); font-size: 1rem;">Users</p>
+    </div>
+
+    <div class="card">
+      <i class="fa fa-coins" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--s-xs);"></i>
+      <h2 style="color: var(--text); font-size: 2rem; margin-bottom: var(--s-xs);">
+        ₦<%= stats.totalSales %>
+      </h2>
+      <p style="color: var(--muted); font-size: 1rem;">Total Sales</p>
+    </div>
+
+  </div>
+
+  <div class="admin-links" style="margin-top: var(--s-lg); text-align: center;">
+    <a href="/admin/products" class="btn btn-primary" style="margin: var(--s-xs);">
+      <i class="fa fa-box"></i> Manage Products
+    </a>
+    <a href="/admin/orders" class="btn btn-primary" style="margin: var(--s-xs);">
+      <i class="fa fa-shopping-cart"></i> Manage Orders
+    </a>
+    <a href="/admin/users" class="btn btn-primary" style="margin: var(--s-xs);">
+      <i class="fa fa-users"></i> Manage Users
+    </a>
+  </div>
+
 </div>
 
 
 
-<style>
+<!-- <style>
   .admin-dashboard {
     padding: 30px;
     max-width: 1000px;
@@ -80,4 +139,4 @@
   .admin-links .btn:hover {
     background: #0056b3;
   }
-</style>
+</style> -->

@@ -11,6 +11,9 @@ exports.getDashboard = async (req, res) => {
     );
 
     res.render("admin/dashboard", {
+      title: "Dashboard | JKT E-Commerce",
+      description: "Shop quality products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce",
       user: req.session.user,
       stats: {
         totalProducts: totalProducts.rows[0].count,
@@ -43,7 +46,11 @@ exports.getProfile = async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    res.render("public/profile", { user }); // your ejs file for profile
+    res.render("public/profile", { 
+      user,
+      title: "Profile | JKT E-Commerce",
+      description: "Shop quality products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce" }); // your ejs file for profile
   } catch (error) {
     console.error("❌ Error loading profile:", error);
     res.status(500).send("Server error");

@@ -74,7 +74,9 @@ exports.getAllUsers = async (req, res) => {
     const result = await pool.query(
       "SELECT id, fullname, email, role FROM users2 ORDER BY created_at DESC"
     );
-    res.render("admin/users", { users: result.rows, user: req.session.user });
+    res.render("admin/users", { users: result.rows, user: req.session.user, title: "Users | JKT E-Commerce",
+      description: "Manage users on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce", });
   } catch (err) {
     console.error("Error fetching users:", err);
     res.status(500).send("Server error");

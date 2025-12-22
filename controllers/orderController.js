@@ -20,7 +20,9 @@ exports.getUserOrders = async (req, res) => {
     const result = await pool.query("SELECT * FROM orders WHERE user_id = $1", [
       req.session.user.id,
     ]);
-    res.render("orders/list", { orders: result.rows, user: req.session.user });
+    res.render("orders/list", { orders: result.rows, user: req.session.user, title: "My Orders | JKT E-Commerce",
+    description: "View your orders on JKT E-Commerce",
+    keywords: "my orders, user orders, jkt ecommerce" });
   } catch (error) {
     console.error("Error fetching user orders:", error);
     res.status(500).send("Server error");
@@ -33,7 +35,9 @@ exports.getAllOrdersAdmin = async (req, res) => {
     const result = await pool.query(
       "SELECT * FROM orders ORDER BY created_at DESC"
     );
-    res.render("admin/orders", { orders: result.rows, user: req.session.user });
+    res.render("admin/orders", { orders: result.rows, user: req.session.user, title: "Manage Orders | JKT E-Commerce",
+    description: "Manage all orders on JKT E-Commerce",
+    keywords: "admin orders, manage orders, jkt ecommerce" });
   } catch (error) {
     console.error("Error fetching admin orders:", error);
     res.status(500).send("Server error");

@@ -88,6 +88,9 @@ exports.getAllProductsAdmin = async (req, res) => {
     );
 
     res.render("admin/products", {
+      title: "Product | JKT E-Commerce",
+      description: "Manage products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce",
       products: products.rows,
       categories: categories.rows,
       user: req.session.user
@@ -198,6 +201,9 @@ exports.getProductById = async (req, res) => {
     res.render("public/detail", {
       product: result.rows[0],
       user: req.session.user,
+      title: "Product Detail | JKT E-Commerce",
+    description: "Shop quality products at affordable prices on JKT E-Commerce",
+    keywords: "online shopping, jkt, ecommerce"
     });
   } catch (error) {
     console.error("Error fetching product:", error);

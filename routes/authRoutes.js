@@ -65,9 +65,21 @@ const {
 const router = express.Router();
 
 // ---------- Page Routes ----------
-router.get("/signup", (req, res) => res.render("public/signup"));
-router.get("/login", (req, res) => res.render("public/login"));
-router.get("/verifyOtp", (req, res) => res.render("public/verifyOtp"));
+router.get("/signup", (req, res) => res.render("public/signup", {
+  title: "Sign Up | JKT E-Commerce",
+  description: "Create an account to shop quality products at affordable prices on JKT E-Commerce",
+  keywords: "signup, register, jkt ecommerce"
+}));
+router.get("/login", (req, res) => res.render("public/login", {
+  title: "Login | JKT E-Commerce",
+  description: "Log in to your account to shop quality products at affordable prices on JKT E-Commerce",
+  keywords: "login, signin, jkt ecommerce"
+}));
+router.get("/verifyOtp", (req, res) => res.render("public/verifyOtp", {
+  title: "Verify OTP | JKT E-Commerce",
+  description: "Verify your account with OTP to shop quality products at affordable prices on JKT E-Commerce",
+  keywords: "otp verification, verify account, jkt ecommerce"
+}));
 
 // ---------- Auth Actions ----------
 router.post("/signup", upload.single("profileImage"), signup);

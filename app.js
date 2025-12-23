@@ -142,11 +142,17 @@ app.get("/", async (req, res) => {
     ];
 
     // Dummy testimonials (replace with actual testimonials table if exists)
-    const testimonials = [
-      { name: "John Doe", message: "Amazing service and products!" },
-      { name: "Jane Smith", message: "Fast delivery, high quality!" },
-      { name: "Aliyah K.", message: "I love shopping on JKT E-Commerce!" },
-    ];
+    // const testimonials = [
+    //   { name: "John Doe", message: "Amazing service and products!" },
+    //   { name: "Jane Smith", message: "Fast delivery, high quality!" },
+    //   { name: "Aliyah K.", message: "I love shopping on JKT E-Commerce!" },
+    // ];
+
+    const testimonialsResult = await pool.query(
+      "SELECT * FROM testimonials WHERE is_approved = true ORDER BY created_at DESC LIMIT 6"
+    );
+    const testimonials = testimonialsResult.rows;
+
 
     res.render("public/home", {
       title: "Home | JKT E-Commerce",

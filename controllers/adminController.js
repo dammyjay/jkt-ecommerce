@@ -293,3 +293,42 @@ exports.createPromotion = [
     }
   },
 ];
+
+// Show all testimonials in admin panel
+exports.getTestimonials = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM testimonials ORDER BY created_at DESC"
+    );
+    res.render("admin/testimonials", {
+      title: "Manage Testimonials | JKT E-Commerce",
+      testimonials: result.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching testimonials");
+  }
+};
+// Approve testimonial
+exports.approveTestimonial = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("UPDATE testimonials SET is_approved = true WHERE id = $1", [id]);
+    res.redirect("/admin/testimonials");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error approving testimonial");
+  }
+};
+
+// Unapprove testimonial
+exports.unapproveTestimonial = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("UPDATE testimonials SET is_approved = false WHERE id = $1", [id]);
+    res.redirect("/admin/testimonials");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error unapproving testimonial");
+  }
+};

@@ -30,6 +30,7 @@ router.post("/profile", upload.single("profileImage"), updateProfile);
 
 router.post("/subscribe", userController.subscribe);
 router.post("/testimonials/create", userController.createTestimonial);
+router.get("/testimonials", userController.getTestimonialForm);
 
 
 module.exports = router;

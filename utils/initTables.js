@@ -83,6 +83,8 @@ async function initTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
+      
+
       -- TESTIMONIALS
       CREATE TABLE IF NOT EXISTS testimonials (
         id SERIAL PRIMARY KEY,
@@ -90,6 +92,8 @@ async function initTables() {
         message TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+
+      ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT false;
 
       -- CATEGORIES (updated with image)
       ALTER TABLE categories ADD COLUMN IF NOT EXISTS image_url TEXT;

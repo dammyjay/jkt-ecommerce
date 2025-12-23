@@ -84,18 +84,38 @@ exports.subscribe = async (req, res) => {
   }
 };
 
+exports.getTestimonialForm = (req, res) => {
+  res.render("public/testimonials", {
+    title: "Add Testimonial | JKT E-Commerce",
+  });
+};
 
+
+// Show the testimonial form
+exports.getTestimonialForm = (req, res) => {
+  res.render("public/testimonials", { // ✅ correct path
+    title: "Add Testimonial | JKT E-Commerce",
+  });
+};
+
+// Create testimonial (submitted by user, default approved = false)
 exports.createTestimonial = async (req, res) => {
   try {
     const { name, message } = req.body;
+
+    // Insert into DB with approved = false
     await pool.query(
-      'INSERT INTO testimonials (name, message) VALUES ($1, $2)',
-      [name, message]
+      'INSERT INTO testimonials (name, message, is_approved) VALUES ($1, $2, $3)',
+      [name, message, false]
     );
-    res.redirect('/admin/testimonials');
+
+    // Redirect back or show a success message
+    res.redirect("/users/testimonials?success=true");
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error adding testimonial');
+    res.status(500).send("Error adding testimonial");
   }
 };
+
+
 

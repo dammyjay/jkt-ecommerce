@@ -42,6 +42,11 @@ router.post("/users/:id/delete", isAdmin, adminController.deleteUser);
 
 // Promotions
 router.post('/promotions/create', adminController.createPromotion);
-
+router.get('/testimonials', isAdmin, adminController.getTestimonials);
+router.post("/testimonials/:id/approve", adminController.approveTestimonial);
+router.post(
+  "/testimonials/:id/unapprove",
+  adminController.unapproveTestimonial
+);
 
 module.exports = router;

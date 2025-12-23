@@ -78,53 +78,6 @@
     </div>
 
     <!-- ✅ Product Table -->
-    <!-- <div class="table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% products.forEach(product => { %>
-            <tr>
-              <td><%= product.id %></td>
-              <td>
-                <% if (product.image_url) { %>
-                  <img src="<%= product.image_url %>" alt="<%= product.name %>" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
-                <% } else { %>
-                  N/A
-                <% } %>
-              <td><%= product.name %></td>
-              <td><%= product.description %></td>
-              <td><%= product.category_name || 'Uncategorized' %></td>
-              <td>₦<%= product.price %></td>
-              <td da><%= product.stock %></td>
-              <td  class="actions">
-                <button class="btn btn-warning btn-sm" onclick='openEditModal(<%- JSON.stringify(product) %>)'>Edit</button>
-
-                <button 
-                  type="button"
-                  class="btn btn-danger btn-sm"
-                  onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')"
-                >
-                  Delete
-                </button>
-
-
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div> -->
     <div class="table-container">
       <table class="table">
         <thead>
@@ -343,17 +296,21 @@ document.getElementById('editForm').addEventListener('submit', function () {
   }
 
   function openEditModal(product) {
-    document.getElementById('editForm').action = `/admin/products/update/${product.id}`;
-    document.getElementById('editName').value = product.name;
-    document.getElementById('editDescription').value = product.description || '';
-    document.getElementById('editPrice').value = product.price;
-    document.getElementById('editStock').value = product.stock;
-    document.getElementById('editCategory').value = product.category_id || '';
-    if(product.image_url) {
-      document.getElementById('editPreview').src = product.image_url;
-    }
-    document.getElementById('editModal').style.display = 'block';
+  document.getElementById('editForm').action =
+    `/products/admin/${product.id}/update`;
+
+  document.getElementById('editName').value = product.name;
+  document.getElementById('editDescription').value = product.description || '';
+  document.getElementById('editPrice').value = product.price;
+  document.getElementById('editStock').value = product.stock;
+  document.getElementById('editCategory').value = product.category_id || '';
+
+  if (product.image_url) {
+    document.getElementById('editPreview').src = product.image_url;
   }
+
+  document.getElementById('editModal').style.display = 'block';
+}
 
   function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';

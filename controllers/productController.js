@@ -88,18 +88,17 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, stock, category_id } = req.body;
-    let imageUrl = null;
+    let ImageUrl = null;
     if (req.file && req.file.path) {
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      const upload = await cloudinary.uploader.upload(req.file.path, {
         folder: "JKT-ecommerce/products",
       });
-
-      imageUrl = uploadResult.secure_url;
+      ImageUrl = upload.secure_url || null;
     }
 
     await pool.query(
-      "UPDATE products SET name=$1, description=$2, price=$3, stock=$4, category_id=$5 WHERE id=$6",
-      [name, description, price, stock, category_id, id]
+      "UPDATE products SET name=$1, description=$2, price=$3, image_url=$4, stock=$5, category_id=$6 WHERE id=$7",
+      [name, description, price, ImageUrl, stock, category_id, id]
     );
     res.redirect("/products/admin/manage");
   } catch (err) {

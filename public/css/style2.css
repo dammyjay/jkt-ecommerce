@@ -676,6 +676,20 @@ select:focus {
   border-radius: var(--r-md);
 }
 
+.table-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.table-filters input,
+.table-filters select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
 .icon-btn {
   background: none;
   border: none;

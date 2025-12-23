@@ -77,54 +77,79 @@
       </div>
     </div>
 
+    <div class="table-filters">
+      <input
+        type="text"
+        id="tableSearch"
+        placeholder="🔍 Search products..."
+      />
+
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat.name.toLowerCase() %>">
+            <%= cat.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+
     <!-- ✅ Product Table -->
     <div class="table-container">
       <table class="table">
         <thead>
+          
           <tr>
-            <th>ID</th>
+
+            <th onclick="sortTable(0)">ID ⬍</th>
             <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
+            <th onclick="sortTable(2)">Name ⬍</th>
+            <th onclick="sortTable(3)">Category ⬍</th>
+            <th onclick="sortTable(4)">Price ⬍</th>
+            <th onclick="sortTable(5)">Stock ⬍</th>
             <th>Actions</th>
+
           </tr>
         </thead>
         <tbody>
           <% products.forEach(product => { %>
-            <tr>
+            <tr
+              data-name="<%= product.name.toLowerCase() %>"
+              data-category="<%= (product.category_name || 'uncategorized').toLowerCase() %>"
+              data-price="<%= product.price %>"
+              data-stock="<%= product.stock %>"
+            >
               <td><%= product.id %></td>
+
               <td>
                 <% if (product.image_url) { %>
-                  <img src="<%= product.image_url %>" alt="<%= product.name %>" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
+                  <img
+                    src="<%= product.image_url %>"
+                    alt="<%= product.name %>"
+                    width="50"
+                    height="50"
+                    style="object-fit: cover; border-radius: 5px;"
+                  >
                 <% } else { %>
                   N/A
                 <% } %>
               </td>
+
               <td><%= product.name %></td>
               <td><%= product.category_name || 'Uncategorized' %></td>
               <td>₦<%= product.price %></td>
               <td><%= product.stock %></td>
+
               <td>
-                <!-- View icon -->
-                <button class="icon-btn" onclick='openViewModal(<%- JSON.stringify(product) %>)' title="View">
-                  👁️
-                </button>
-
-                <!-- Edit icon -->
-                <button class="icon-btn" onclick='openEditModal(<%- JSON.stringify(product) %>)' title="Edit">
-                  ✏️
-                </button>
-
-                <!-- Delete icon -->
-                <button class="icon-btn" onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')" title="Delete">
-                  🗑️
-                </button>
+                <button class="icon-btn" onclick='openViewModal(<%- JSON.stringify(product) %>)'>👁️</button>
+                <button class="icon-btn" onclick='openEditModal(<%- JSON.stringify(product) %>)'>✏️</button>
+                <button class="icon-btn" onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')">🗑️</button>
               </td>
             </tr>
           <% }) %>
         </tbody>
+
       </table>
     </div>
 
@@ -376,3 +401,65 @@ document.getElementById('editForm').addEventListener('submit', function () {
   };
 </script>
 
+<!-- Script for filtering -->
+
+<script>
+const searchInput = document.getElementById('tableSearch');
+const categorySelect = document.getElementById('categoryFilter');
+const rows = document.querySelectorAll('.table tbody tr');
+
+function filterTable() {
+  const searchValue = searchInput.value.toLowerCase();
+  const categoryValue = categorySelect.value;
+
+  rows.forEach(row => {
+    const name = row.dataset.name;
+    const category = row.dataset.category;
+    const price = row.dataset.price;
+    const stock = row.dataset.stock;
+
+    const matchesSearch =
+      name.includes(searchValue) ||
+      category.includes(searchValue) ||
+      price.includes(searchValue) ||
+      stock.includes(searchValue);
+
+    const matchesCategory =
+      categoryValue === "" || category === categoryValue;
+
+    row.style.display = matchesSearch && matchesCategory ? "" : "none";
+  });
+}
+
+searchInput.addEventListener('input', filterTable);
+categorySelect.addEventListener('change', filterTable);
+</script>
+
+<!-- Script for sorting -->
+ <script>
+let sortDirection = true;
+
+function sortTable(colIndex) {
+  const tbody = document.querySelector('.table tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  rows.sort((a, b) => {
+    let A = a.children[colIndex].innerText.trim();
+    let B = b.children[colIndex].innerText.trim();
+
+    let numA = parseFloat(A.replace(/[₦,]/g, ''));
+    let numB = parseFloat(B.replace(/[₦,]/g, ''));
+
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return sortDirection ? numA - numB : numB - numA;
+    }
+
+    return sortDirection
+      ? A.localeCompare(B)
+      : B.localeCompare(A);
+  });
+
+  sortDirection = !sortDirection;
+  rows.forEach(row => tbody.appendChild(row));
+}
+</script>

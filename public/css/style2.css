@@ -48,6 +48,21 @@
     font-weight: 600;
 }
 
+
+/* ========== FOOTER ========== */
+.footer {
+    background: #86660fca;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 14px;
+}
+
+.footer p {
+    margin: 0;
+    color: #000;
+}
+
 /* ========== NAVBAR ========== */
 .navbar {
     background-color: #1e1e1e;
@@ -204,7 +219,7 @@ p {
 /* ======================================================
    INPUTS (ONE STYLE EVERYWHERE)
 ====================================================== */
-.input,
+/* .input,
 input,
 textarea,
 select {
@@ -226,7 +241,59 @@ select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(134,102,15,.15);
+} */
+
+.input,
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  transition: border-color .2s, box-shadow .2s;
+  margin-bottom: var(--s-md);
 }
+
+.input:focus,
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(134,102,15,.15);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.toggle-password:hover {
+  color: var(--primary);
+}
+
+.image-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  margin-bottom: var(--s-md);
+  display: block;
+}
+
 
 /* ======================================================
    BUTTON SYSTEM
@@ -258,6 +325,12 @@ select:focus {
 .btn-success { background: var(--success); color: var(--white); }
 
 .btn-warning { background: var(--warning); color: var(--white); }
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
 
 /* Active category filter */
 .btn-filter-active {
@@ -353,6 +426,12 @@ select:focus {
 .table tr:nth-child(even) {
   background: #f9f9f9;
 }
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
 
 /* ======================================================
    NOTIFICATION

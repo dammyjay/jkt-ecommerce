@@ -84,14 +84,45 @@
           required
         />
 
-        <label>Password</label>
+        <!-- <label>Password</label>
         <input
           type="password"
           name="password"
           class="input"
           placeholder="Password"
           required
-        />
+        /> -->
+
+        <label>Password</label>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="input"
+            placeholder="Password"
+            required
+          />
+          <i class="fa fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+        </div>
+
+        <label>Confirm Password</label>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            class="input"
+            placeholder="Confirm Password"
+            required
+            onblur="checkPasswordMatch()"
+          />
+          <i class="fa fa-eye toggle-password" onclick="togglePassword('confirmPassword', this)"></i>
+        </div>
+
+        <p id="passwordError" style="color:#dc2626; font-size:0.85rem;"></p>
+
+
 
         <label>Profile Image</label>
         <input
@@ -198,6 +229,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Script for form submission and otp modal -->
 <script>
   const signupForm = document.getElementById("signupForm");
   const otpForm = document.getElementById("otpForm");
@@ -209,6 +242,18 @@
   // 🟢 Signup form submit
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const errorEl = document.getElementById("passwordError");
+
+      if (password !== confirmPassword) {
+        errorEl.textContent = "Passwords do not match";
+        return;
+      }
+
+      errorEl.textContent = "Passwords match";
+      errorEl.style.color = "green";
 
     // Show loading icon
     loadingOverlay.querySelector("p").textContent = "Signing you up...";
@@ -298,6 +343,41 @@
     // otpModal.style.display = "none";
     otpModal.classList.remove("active");
   };
+
+  function togglePassword(inputId, icon) {
+  const input = document.getElementById(inputId);
+
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
+
+function checkPasswordMatch() {
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const errorEl = document.getElementById("passwordError");
+
+  // Do nothing if confirm password is empty
+  if (!confirmPassword) {
+    errorEl.textContent = "";
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    errorEl.textContent = "Passwords do not match";
+  } else {
+      errorEl.textContent = "Passwords match";
+      errorEl.style.color = "green";
+  }
+}
+
+
 
   // 🟢 Close modal when clicking outside it
   window.onclick = (e) => {

@@ -1,4 +1,4 @@
-<div class="admin-container">
+<!-- <div class="admin-container">
   <h2>All Users</h2>
 
     <div class="table-container">
@@ -35,11 +35,53 @@
         </tbody>
       </table>
     </div>
+</div> -->
+
+<div class="admin-container container">
+  <div class="card">
+    <h2>All Users</h2>
+
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr>
+              <td data-label="ID"><%= user.id %></td>
+              <td data-label="Name"><%= user.fullname %></td>
+              <td data-label="Email"><%= user.email %></td>
+              <td data-label="Role"><%= user.role %></td>
+              <td data-label="Actions" class="actions">
+                <button 
+                  class="btn btn-warning btn-sm"
+                  onclick="openEditModal('<%= user.id %>', '<%= user.fullname %>', '<%= user.email %>', '<%= user.role %>')">
+                  Edit
+                </button>
+
+                <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
 
 <!-- 🧩 Edit User Modal -->
 <div id="editModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-box">
     <h3>Edit User</h3>
     <form id="editUserForm" method="POST">
       <input type="hidden" id="editUserId" name="id">
@@ -57,9 +99,10 @@
       </select>
 
       <div class="modal-actions">
-        <button type="submit" class="btn save-btn">Save Changes</button>
-        <button type="button" class="btn cancel-btn" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       </div>
+
     </form>
   </div>
 </div>

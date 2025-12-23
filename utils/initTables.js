@@ -66,6 +66,34 @@ async function initTables() {
       );
 
       CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+
+      -- NEWSLETTER SUBSCRIPTIONS
+      CREATE TABLE IF NOT EXISTS newsletter (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- PROMOTIONS
+      CREATE TABLE IF NOT EXISTS promotions (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(150) NOT NULL,
+        image_url TEXT,
+        discount VARCHAR(50),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- TESTIMONIALS
+      CREATE TABLE IF NOT EXISTS testimonials (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- CATEGORIES (updated with image)
+      ALTER TABLE categories ADD COLUMN IF NOT EXISTS image_url TEXT;
+
     `);
 
     console.log("✅ All tables initialized successfully");

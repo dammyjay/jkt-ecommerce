@@ -1,6 +1,16 @@
 const pool = require("../utils/db");
 const cloudinary = require("../utils/cloudinary");
+const multer = require("multer");
+const upload = multer({ dest: "tmp/" }); // temp storage
+// const storage = new CloudinaryStorage({
+//   cloudinary,
+//   params: {
+//     folder: 'categories',
+//     allowed_formats: ['jpg', 'png', 'jpeg'],
+//   },
+// });
 
+// // const parser = multer({ storage });
 // exports.getDashboard = async (req, res) => {
 //   try {
 //     const totalProducts = await pool.query("SELECT COUNT(*) FROM products");
@@ -212,3 +222,74 @@ exports.updateProfile = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+// ✅ Admin: Get all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, fullname, email, role FROM users2 ORDER BY created_at DESC"
+    );
+    res.render("admin/users", { users: result.rows, user: req.session.user, title: "Users | JKT E-Commerce",
+      description: "Manage users on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce", 
+      ogImage: "/images/JKT logo bg.png",  });
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).send("Server error");
+  }
+};
+
+// ✅ Admin: Delete a user
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("DELETE FROM users2 WHERE id = $1", [id]);
+    res.redirect("/admin/users");
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.editUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullname, email, role } = req.body;
+
+    await pool.query(
+      "UPDATE users2 SET fullname = $1, email = $2, role = $3 WHERE id = $4",
+      [fullname, email, role, id]
+    );
+
+    res.redirect("/admin/users");
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.createPromotion = [
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { title, discount } = req.body;
+      let image_url = null;
+
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "promotions",
+        });
+        image_url = result.secure_url;
+      }
+
+      await pool.query(
+        "INSERT INTO promotions (title, discount, image_url) VALUES ($1, $2, $3)",
+        [title, discount, image_url]
+      );
+      res.redirect("/admin/promotions");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error creating promotion");
+    }
+  },
+];

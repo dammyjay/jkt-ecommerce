@@ -36,9 +36,12 @@ router.get("/products", isAdmin, productController.getAllProductsAdmin);
 // ✅ Admin Orders Page
 router.get("/orders", isAdmin, orderController.getAllOrdersAdmin);
 
-router.get("/users", isAdmin, userController.getAllUsers);
-router.post("/users/:id/edit", isAdmin, userController.editUser);
-router.post("/users/:id/delete", isAdmin, userController.deleteUser);
+router.get("/users", isAdmin, adminController.getAllUsers);
+router.post("/users/:id/edit", isAdmin, adminController.editUser);
+router.post("/users/:id/delete", isAdmin, adminController.deleteUser);
+
+// Promotions
+router.post('/promotions/create', adminController.createPromotion);
 
 
 module.exports = router;

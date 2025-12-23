@@ -28,11 +28,8 @@ router.get("/profile", (req, res) => {
 // Update profile
 router.post("/profile", upload.single("profileImage"), updateProfile);
 
-// Admin routes
-router.get("/", userController.getAllUsers);
-// router.post("/:id/delete", userController.deleteUser);
-router.post("/users/:id/edit", userController.editUser);
-router.post("/users/:id/delete", userController.deleteUser);
+router.post("/subscribe", userController.subscribe);
+router.post("/testimonials/create", userController.createTestimonial);
 
 
 module.exports = router;

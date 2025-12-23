@@ -68,6 +68,8 @@
             placeholder="New Category Name" 
             required
           >
+
+          <input type="file" name="image" accept="image/*" required>
           <button type="submit" class="btn btn-primary btn-full">
             Create Category
           </button>
@@ -76,7 +78,7 @@
     </div>
 
     <!-- ✅ Product Table -->
-    <div class="table-container">
+    <!-- <div class="table-container">
       <table class="table">
         <thead>
           <tr>
@@ -104,13 +106,13 @@
               <td><%= product.description %></td>
               <td><%= product.category_name || 'Uncategorized' %></td>
               <td>₦<%= product.price %></td>
-              <td><%= product.stock %></td>
-              <td style="display: flex; gap: 10px; justify-content: center;">
-                <button class="btn-edit" onclick='openEditModal(<%- JSON.stringify(product) %>)'>Edit</button>
+              <td da><%= product.stock %></td>
+              <td  class="actions">
+                <button class="btn btn-warning btn-sm" onclick='openEditModal(<%- JSON.stringify(product) %>)'>Edit</button>
 
                 <button 
                   type="button"
-                  class="btn-delete"
+                  class="btn btn-danger btn-sm"
                   onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')"
                 >
                   Delete
@@ -122,6 +124,73 @@
           <% }) %>
         </tbody>
       </table>
+    </div> -->
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+            <tr>
+              <td><%= product.id %></td>
+              <td>
+                <% if (product.image_url) { %>
+                  <img src="<%= product.image_url %>" alt="<%= product.name %>" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
+                <% } else { %>
+                  N/A
+                <% } %>
+              </td>
+              <td><%= product.name %></td>
+              <td><%= product.category_name || 'Uncategorized' %></td>
+              <td>₦<%= product.price %></td>
+              <td><%= product.stock %></td>
+              <td class="actions">
+                <!-- View icon -->
+                <button class="icon-btn" onclick='openViewModal(<%- JSON.stringify(product) %>)' title="View">
+                  👁️
+                </button>
+
+                <!-- Edit icon -->
+                <button class="icon-btn" onclick='openEditModal(<%- JSON.stringify(product) %>)' title="Edit">
+                  ✏️
+                </button>
+
+                <!-- Delete icon -->
+                <button class="icon-btn" onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')" title="Delete">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- 👁️ View Product Modal -->
+<div id="viewModal" class="modal">
+  <div class="modal-box">
+    <span class="close" onclick="closeViewModal()">&times;</span>
+    <h2>Product Details</h2>
+    <div id="viewContent">
+      <p><strong>Name:</strong> <span id="viewName"></span></p>
+      <p><strong>Category:</strong> <span id="viewCategory"></span></p>
+      <p><strong>Price:</strong> ₦<span id="viewPrice"></span></p>
+      <p><strong>Stock:</strong> <span id="viewStock"></span></p>
+      <p><strong>Description:</strong></p>
+      <p id="viewDescription"></p>
+      <img id="viewImage" style="width:100%; max-width:300px; margin-top:10px;">
     </div>
   </div>
 </div>
@@ -274,24 +343,20 @@ document.getElementById('editForm').addEventListener('submit', function () {
   }
 
   function openEditModal(product) {
-    const editModal = document.getElementById("editModal");
-    // editModal.style.display = "flex";
-    editModal.classList.add("active");
-
-    document.getElementById("editName").value = product.name;
-    // document.getElementById("editDescription").value = product.description;
-    editEditor.setData(product.description || '');
-    document.getElementById("editCategory").value = product.category_id;
-    document.getElementById("editPrice").value = product.price;
-    document.getElementById("editStock").value = product.stock;
-    document.getElementById("editPreview").src = product.image_url || "";
-    document.getElementById("editForm").action = `/products/admin/${product.id}/update`;
-}
-
+    document.getElementById('editForm').action = `/admin/products/update/${product.id}`;
+    document.getElementById('editName').value = product.name;
+    document.getElementById('editDescription').value = product.description || '';
+    document.getElementById('editPrice').value = product.price;
+    document.getElementById('editStock').value = product.stock;
+    document.getElementById('editCategory').value = product.category_id || '';
+    if(product.image_url) {
+      document.getElementById('editPreview').src = product.image_url;
+    }
+    document.getElementById('editModal').style.display = 'block';
+  }
 
   function closeEditModal() {
-    // editModal.style.display = "none";
-    editModal.classList.remove("active");
+    document.getElementById('editModal').style.display = 'none';
   }
 
   function previewCreateImage(event) {
@@ -319,6 +384,25 @@ document.getElementById('editForm').addEventListener('submit', function () {
     deleteModal.classList.remove("active");
   }
 
+  // View modal
+  function openViewModal(product) {
+    document.getElementById('viewName').innerText = product.name;
+    document.getElementById('viewCategory').innerText = product.category_name || 'Uncategorized';
+    document.getElementById('viewPrice').innerText = product.price;
+    document.getElementById('viewStock').innerText = product.stock;
+    document.getElementById('viewDescription').innerHTML = product.description || 'N/A';
+    if(product.image_url) {
+      document.getElementById('viewImage').src = product.image_url;
+      document.getElementById('viewImage').style.display = 'block';
+    } else {
+      document.getElementById('viewImage').style.display = 'none';
+    }
+    document.getElementById('viewModal').style.display = 'block';
+  }
+  function closeViewModal() {
+    document.getElementById('viewModal').style.display = 'none';
+  }
+
   window.onclick = function (event) {
     if (event.target === createModal) closeCreateModal();
     if (event.target === editModal) closeEditModal();
@@ -326,6 +410,7 @@ document.getElementById('editForm').addEventListener('submit', function () {
     if (event.target === deleteModal) {
       closeDeleteModal();
     }
+    if (event.target.id === "viewModal") closeViewModal();
   };
 </script>
 

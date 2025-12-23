@@ -106,7 +106,7 @@
               <td><%= product.category_name || 'Uncategorized' %></td>
               <td>₦<%= product.price %></td>
               <td><%= product.stock %></td>
-              <td class="actions">
+              <td>
                 <!-- View icon -->
                 <button class="icon-btn" onclick='openViewModal(<%- JSON.stringify(product) %>)' title="View">
                   👁️
@@ -300,7 +300,7 @@ document.getElementById('editForm').addEventListener('submit', function () {
     `/products/admin/${product.id}/update`;
 
   document.getElementById('editName').value = product.name;
-  document.getElementById('editDescription').value = product.description || '';
+  // document.getElementById('editDescription').value = product.description || '';
   document.getElementById('editPrice').value = product.price;
   document.getElementById('editStock').value = product.stock;
   document.getElementById('editCategory').value = product.category_id || '';
@@ -308,6 +308,11 @@ document.getElementById('editForm').addEventListener('submit', function () {
   if (product.image_url) {
     document.getElementById('editPreview').src = product.image_url;
   }
+
+   // ✅ Set CKEditor content
+    if (editEditor) {
+      editEditor.setData(product.description || '');
+    }
 
   document.getElementById('editModal').style.display = 'block';
 }

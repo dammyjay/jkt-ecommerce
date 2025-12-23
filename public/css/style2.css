@@ -676,6 +676,14 @@ select:focus {
   border-radius: var(--r-md);
 }
 
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color .2s;
+}
+
 
 
 /* ======================================================

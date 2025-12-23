@@ -113,11 +113,56 @@ app.use("/", categoryRoutes);
 
 
 // 🏠 HOME ROUTE
-app.get("/", (req, res) => {
-  res.render("public/home", { title: "Home | JKT E-Commerce", 
-    description: "Shop quality products at affordable prices on JKT E-Commerce", 
-    keywords: "online shopping, jkt, ecommerce",
-    ogImage: "/images/JKT logo bg.png",});
+// app.get("/", (req, res) => {
+//   res.render("public/home", { title: "Home | JKT E-Commerce", 
+//     description: "Shop quality products at affordable prices on JKT E-Commerce", 
+//     keywords: "online shopping, jkt, ecommerce",
+//     ogImage: "/images/JKT logo bg.png",});
+// });
+
+app.get("/", async (req, res) => {
+  try {
+    // Fetch categories
+    const categoriesResult = await pool.query("SELECT * FROM categories ORDER BY name ASC");
+    const categories = categoriesResult.rows;
+
+    // Fetch featured products
+    const featuredResult = await pool.query("SELECT * FROM products ORDER BY created_at DESC LIMIT 6");
+    const featuredProducts = featuredResult.rows;
+
+    // Fetch new arrivals
+    const newResult = await pool.query("SELECT * FROM products ORDER BY created_at DESC LIMIT 6");
+    const newProducts = newResult.rows;
+
+    // Optional: fetch promotions & testimonials
+     const promotions = [
+      { title: "Flash Sale", discount: "20%", image_url: "/images/promo1.jpg" },
+      { title: "Black Friday", discount: "50%", image_url: "/images/promo2.jpg" },
+      { title: "Mega Deal", discount: "30%", image_url: "/images/promo3.jpg" },
+    ];
+
+    // Dummy testimonials (replace with actual testimonials table if exists)
+    const testimonials = [
+      { name: "John Doe", message: "Amazing service and products!" },
+      { name: "Jane Smith", message: "Fast delivery, high quality!" },
+      { name: "Aliyah K.", message: "I love shopping on JKT E-Commerce!" },
+    ];
+
+    res.render("public/home", {
+      title: "Home | JKT E-Commerce",
+      description: "Shop quality products at affordable prices on JKT E-Commerce",
+      keywords: "online shopping, jkt, ecommerce",
+      ogImage: "/images/JKT logo bg.png",
+      categories,
+      featuredProducts,
+      newProducts,
+      promotions,
+      testimonials
+    });
+  } catch (err) {
+    console.error("Error loading home page:", err);
+    res.status(500).send("Error loading homepage");
+  }
 });
 
 // const userRoutes = require("./routes/userRoutes");

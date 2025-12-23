@@ -1,14 +1,118 @@
 const pool = require("../utils/db");
 const cloudinary = require("../utils/cloudinary");
 
+// exports.getDashboard = async (req, res) => {
+//   try {
+//     const totalProducts = await pool.query("SELECT COUNT(*) FROM products");
+//     const totalOrders = await pool.query("SELECT COUNT(*) FROM orders");
+//     const totalUsers = await pool.query("SELECT COUNT(*) FROM users2");
+//     const totalSales = await pool.query(
+//       "SELECT COALESCE(SUM(total_amount), 0) AS total_sales FROM orders WHERE status='completed'"
+//     );
+
+//     res.render("admin/dashboard", {
+//       title: "Dashboard | JKT E-Commerce",
+//       description: "Shop quality products at affordable prices on JKT E-Commerce",
+//       keywords: "online shopping, jkt, ecommerce",
+//       ogImage: "/images/JKT logo bg.png",
+//       user: req.session.user,
+//       stats: {
+//         totalProducts: totalProducts.rows[0].count,
+//         totalOrders: totalOrders.rows[0].count,
+//         totalUsers: totalUsers.rows[0].count,
+//         totalSales: totalSales.rows[0].total_sales || 0,
+//       },
+//     });
+//   } catch (err) {
+//     console.error("Error loading dashboard:", err);
+//     res.status(500).send("Error loading admin dashboard");
+//   }
+// };
+
+
 exports.getDashboard = async (req, res) => {
   try {
-    const totalProducts = await pool.query("SELECT COUNT(*) FROM products");
-    const totalOrders = await pool.query("SELECT COUNT(*) FROM orders");
-    const totalUsers = await pool.query("SELECT COUNT(*) FROM users2");
-    const totalSales = await pool.query(
+    // Total Products
+    const totalProductsRes = await pool.query("SELECT COUNT(*) FROM products");
+    const totalProducts = totalProductsRes.rows[0].count;
+
+    // Total Orders
+    const totalOrdersRes = await pool.query("SELECT COUNT(*) FROM orders");
+    const totalOrders = totalOrdersRes.rows[0].count;
+
+    // Total Users
+    const totalUsersRes = await pool.query("SELECT COUNT(*) FROM users2");
+    const totalUsers = totalUsersRes.rows[0].count;
+
+    // Total Sales (completed orders)
+    const totalSalesRes = await pool.query(
       "SELECT COALESCE(SUM(total_amount), 0) AS total_sales FROM orders WHERE status='completed'"
     );
+    const totalSales = totalSalesRes.rows[0].total_sales || 0;
+
+    // Pending Orders
+    const pendingOrdersRes = await pool.query(
+      "SELECT COUNT(*) FROM orders WHERE status='pending'"
+    );
+    const pendingOrders = pendingOrdersRes.rows[0].count;
+
+    // Low Stock Products (assuming threshold = 5)
+    const lowStockRes = await pool.query(
+      "SELECT COUNT(*) FROM products WHERE price <= 5"
+    );
+    const lowStock = lowStockRes.rows[0].count;
+
+    // New Users (last 7 days)
+    const newUsersRes = await pool.query(
+      "SELECT COUNT(*) FROM users2 WHERE created_at >= NOW() - INTERVAL '7 days'"
+    );
+    const newUsers = newUsersRes.rows[0].count;
+
+    // New Orders (last 7 days)
+    const newOrdersRes = await pool.query(
+      "SELECT COUNT(*) FROM orders WHERE created_at >= NOW() - INTERVAL '7 days'"
+    );
+    const newOrders = newOrdersRes.rows[0].count;
+
+    // Sales by Date (last 30 days) for line chart
+    const salesByDateRes = await pool.query(`
+      SELECT to_char(created_at::date, 'YYYY-MM-DD') AS date,
+             COALESCE(SUM(total_amount),0) AS total
+      FROM orders
+      WHERE status='completed' AND created_at >= NOW() - INTERVAL '30 days'
+      GROUP BY date
+      ORDER BY date
+    `);
+    const salesByDate = {
+      labels: salesByDateRes.rows.map(r => r.date),
+      data: salesByDateRes.rows.map(r => r.total)
+    };
+
+    // Orders by Status for doughnut chart
+    const ordersStatusRes = await pool.query(`
+      SELECT status, COUNT(*) AS count
+      FROM orders
+      GROUP BY status
+    `);
+    const ordersByStatus = {
+      pending: 0,
+      completed: 0,
+      cancelled: 0
+    };
+    ordersStatusRes.rows.forEach(r => {
+      if (r.status === "pending") ordersByStatus.pending = parseInt(r.count);
+      if (r.status === "completed") ordersByStatus.completed = parseInt(r.count);
+      if (r.status === "cancelled") ordersByStatus.cancelled = parseInt(r.count);
+    });
+
+    // Recent Orders (last 10 orders)
+    const recentOrdersRes = await pool.query(`
+      SELECT o.id, u.fullname AS user_name, o.total_amount, o.status, o.created_at
+      FROM orders o
+      JOIN users2 u ON o.user_id = u.id
+      ORDER BY o.created_at DESC
+      LIMIT 10
+    `);
 
     res.render("admin/dashboard", {
       title: "Dashboard | JKT E-Commerce",
@@ -17,17 +121,26 @@ exports.getDashboard = async (req, res) => {
       ogImage: "/images/JKT logo bg.png",
       user: req.session.user,
       stats: {
-        totalProducts: totalProducts.rows[0].count,
-        totalOrders: totalOrders.rows[0].count,
-        totalUsers: totalUsers.rows[0].count,
-        totalSales: totalSales.rows[0].total_sales || 0,
+        totalProducts,
+        totalOrders,
+        totalUsers,
+        totalSales,
+        pendingOrders,
+        lowStock,
+        newUsers,
+        newOrders,
+        salesByDate,
+        ordersByStatus
       },
+      recentOrders: recentOrdersRes.rows
     });
+
   } catch (err) {
     console.error("Error loading dashboard:", err);
     res.status(500).send("Error loading admin dashboard");
   }
 };
+
 
 exports.getProfile = async (req, res) => {
   try {

@@ -21,7 +21,6 @@
           action="/products/admin/create" 
           method="POST" 
           enctype="multipart/form-data"
-          class="modal"
         >
           <label>Product Name</label>
           <input type="text" name="name" required>
@@ -62,7 +61,6 @@
         <form 
           action="/admin/categories/create" 
           method="POST"
-          style="margin-bottom: 20px;"
         >
           <input 
             type="text" 
@@ -70,7 +68,7 @@
             placeholder="New Category Name" 
             required
           >
-          <button type="submit" class="btn-primary">
+          <button type="submit" class="btn btn-primary btn-full">
             Create Category
           </button>
         </form>
@@ -324,101 +322,10 @@ document.getElementById('editForm').addEventListener('submit', function () {
   window.onclick = function (event) {
     if (event.target === createModal) closeCreateModal();
     if (event.target === editModal) closeEditModal();
+    if (event.target === categoryModal) closeCategoryModal(); 
     if (event.target === deleteModal) {
       closeDeleteModal();
     }
   };
 </script>
-
-
-<!-- <style>
-  .admin-container {
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-  }
-  .add-product-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-  .add-product-form input, .add-product-form button {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  .product-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
-}
-
-.product-table th,
-.product-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.product-table th {
-  background-color: #f4f4f4;
-}
-
-  .inline-form {
-    display: inline;
-  }
-  /* Modal Styling */
-  /* .modal {
-    display: none;
-    position: fixed;
-    z-index: 100;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4);
-  }
-  .modal-content {
-    background: white;
-    margin: 10% auto;
-    padding: 20px;
-    width: 50%;
-    border-radius: 8px;
-  } */
-  .close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  @media (max-width: 768px) {
-    .add-product-form { flex-direction: column; }
-    .modal-content { width: 90%; }
-  }
-
-  
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .add-product-form { flex-direction: column; }
-  .modal-content { width: 70%; }
-}
-
-@media (max-width: 768px) {
-  .modal-content { width: 90%; }
-  .product-table th,
-  .product-table td { font-size: 14px; padding: 8px; }
-  .add-product-form input,
-  .add-product-form select,
-  .add-product-form button,
-  .add-product-form textarea { font-size: 14px; }
-}
-
-@media (max-width: 480px) {
-  .add-product-form input,
-  .add-product-form select,
-  .add-product-form button,
-  .add-product-form textarea { flex: 1 1 100%; }
-  /* .btn-edit, .btn-delete { padding: 5px; font-size: 12px; } */
-}
-</style> -->
-
 

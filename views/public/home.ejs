@@ -1,29 +1,112 @@
-<!-- 
-
+<!-- ======================= HERO / BANNER ======================= -->
 <section class="home">
-  <div class="container">
+  <div class="container home-banner-card">
     <img src="/images/banner.jpg" alt="Home Banner" class="home-banner">
     <h2>Welcome to JKT E-Commerce</h2>
-  <p>Discover amazing electronics, gadgets, and more.</p>
-  <a href="/products" class="btn">Start Shopping</a>
-  </div>
-
-</section> -->
-
-
-<section class="home">
-  <div class="container card" style="text-align: center; padding: var(--s-lg); margin-top: var(--s-lg);">
-    
-    <img src="/images/banner.jpg" alt="Home Banner" class="home-banner" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: var(--r-lg); margin-bottom: var(--s-md);">
-
-    <h2 style="font-size: 2rem; margin-bottom: var(--s-sm);">Welcome to JKT E-Commerce</h2>
-    <p style="font-size: 1rem; color: var(--muted); margin-bottom: var(--s-md);">
-      Discover amazing electronics, gadgets, and more.
-    </p>
-
-    <a href="/products" class="btn btn-primary btn-full" style="max-width: 220px; margin: auto;">
-      Start Shopping
-    </a>
-    
+    <p>Discover amazing electronics, gadgets, and more.</p>
+    <a href="/products" class="btn btn-primary btn-full">Start Shopping</a>
   </div>
 </section>
+
+<!-- ======================= CATEGORIES ======================= -->
+<section class="categories">
+  <div class="container home-banner-card">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+      <% categories.forEach(category => { %>
+        <div class="card category-card" onclick="location.href='/products?category=<%= category.id %>'">
+          <img src="<%= category.image_url %>" alt="<%= category.name %>">
+          <p><%= category.name %></p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FEATURED PRODUCTS ======================= -->
+<section class="featured-products">
+  <div class="container home-banner-card">
+    <h2>Featured Products</h2>
+    <div class="scroll-slider">
+      <% featuredProducts.forEach(product => { %>
+        <div class="card product-card">
+          <img src="<%= product.image_url %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p class="price">₦<%= product.price %></p>
+          <a href="/products/<%= product.id %>" class="btn btn-secondary btn-full">View Product</a>
+        </div>
+      <% }) %>
+    </div>
+    <div class="btn btn-sm">
+      <a href="/products?featured=true" class="btn btn-primary">View More</a>
+    </div>
+  </div>
+  
+</section>
+
+<!-- ======================= PROMOTIONS ======================= -->
+<section class="promotions">
+  <div class="container home-banner-card">
+    <h2>Hot Deals & Promotions</h2>
+    <div class="scroll-slider promo-slider">
+      <% promotions.forEach(promo => { %>
+        <div class="card promo-card">
+          <img src="<%= promo.image_url %>" alt="<%= promo.title %>">
+          <h3><%= promo.title %></h3>
+          <p class="discount"><%= promo.discount %> OFF</p>
+        </div>
+      <% }) %>
+    </div>
+    <div class="btn btn-sm">
+      <a href="/promotions" class="btn btn-primary">View More</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TESTIMONIALS ======================= -->
+<section class="testimonials">
+  <div class="container home-banner-card">
+    <h2>What Our Customers Say</h2>
+    <div class="scroll-slider testimonial-slider">
+      <% testimonials.forEach(testimonial => { %>
+        <div class="card testimonial-card">
+          <p>"<%= testimonial.message %>"</p>
+          <p class="testimonial-name">- <%= testimonial.name %></p>
+        </div>
+      <% }) %>
+    </div>
+    <div class="btn btn-sm">
+      <a href="/testimonials" class="btn btn-primary">View More</a>
+    </div>
+  </div>
+  
+</section>
+
+<!-- ======================= NEW ARRIVALS ======================= -->
+<section class="new-arrivals">
+  <div class="container home-banner-card">
+    <h2>New Arrivals</h2>
+    <div class="scroll-slider">
+      <% newProducts.forEach(product => { %>
+        <div class="card product-card">
+          <img src="<%= product.image_url %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p class="price">₦<%= product.price %></p>
+          <a href="/products/<%= product.id %>" class="btn btn-secondary btn-full">View Product</a>
+        </div>
+      <% }) %>
+    </div>
+    <div class="btn btn-sm">
+      <a href="/products?new=true" class="btn btn-primary">View More</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Mobile menu toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+</script>

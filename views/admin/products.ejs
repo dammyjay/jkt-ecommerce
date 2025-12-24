@@ -144,7 +144,9 @@
               <td>
                 <button class="icon-btn" onclick='openViewModal(<%- JSON.stringify(product) %>)'>👁️</button>
                 <button class="icon-btn" onclick='openEditModal(<%- JSON.stringify(product) %>)'>✏️</button>
+                <!-- <button class="icon-btn" onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')">🗑️</button> -->
                 <button class="icon-btn" onclick="openDeleteModal('<%= product.id %>', '<%= product.name %>')">🗑️</button>
+
               </td>
             </tr>
           <% }) %>
@@ -214,27 +216,27 @@
   </div>
 </div>
 
-<!-- ❌ Delete Confirmation Modal -->
-<div id="deleteModal" class="modal" style="display: none;">
-  <div class="modal-box center small">
-    <span class="close" onclick="closeDeleteModal()">&times;</span>
+  <!-- ❌ Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-box center small">
+      <span class="close" onclick="closeDeleteModal()">&times;</span>
 
-    <h3>Delete Product</h3>
-    <p>
-      Are you sure you want to delete  
-      <strong id="deleteProductName"></strong>?
-    </p>
+      <h3>Delete Product</h3>
+      <p>
+        Are you sure you want to delete  
+        <strong id="deleteProductName"></strong>?
+      </p>
 
-    <form id="deleteForm" method="POST">
-      <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
-        Cancel
-      </button>
-      <button type="submit" class="btn btn-danger">
-        Yes, Delete
-      </button>
-    </form>
+      <form id="deleteForm" method="POST">
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-danger">
+          Yes, Delete
+        </button>
+      </form>
+    </div>
   </div>
-</div>
 
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 

@@ -94,6 +94,8 @@ const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const adminProjectRoutes = require("./routes/adminProjectRoutes");
+const projectRoutes = require("./routes/projectRoutes");
 
 
 
@@ -102,11 +104,13 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);  // user-facing product routes
 app.use("/orders", orderRoutes);      // user-facing orders
 app.use("/cart", cartRoutes);
+app.use("/projects", projectRoutes);
 
 // ADMIN ROUTES
 app.use("/admin", adminRoutes);
 app.use("/users", userRoutes);
 app.use("/", categoryRoutes);
+app.use("/admin", adminProjectRoutes);
 
 
 

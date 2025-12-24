@@ -218,6 +218,71 @@
   font-weight: 500;
   margin-top: var(--s-xs);
 }
+
+/* ---------- GALLERY STYLING ---------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+/* Delete button inside gallery */
+/* .gallery-item form button {
+  width: 100%;
+  font-size: 0.8rem;
+  padding: 4px 0;
+} */
+
+/* ---------- VIDEO GRID STYLING ---------- */
+.videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.video-item {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-item iframe,
+.video-item video {
+  width: 100%;
+  height: 180px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
 /* ---------------- FOOTER ---------------- */
 .footer {
   background: var(--primary);
@@ -378,6 +443,54 @@
     object-fit: cover;
 }
 
+.dropdown {
+  position: relative;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: inherit;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #111;
+  min-width: 180px;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  border-radius: 6px;
+  padding: 8px 0;
+}
+
+.dropdown-content.right {
+  right: 0;
+  left: auto;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Profile image */
+.profile-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
 
 
 /* TOGGLE BUTTON */
@@ -1001,6 +1114,17 @@ select:focus {
    RESPONSIVE
 ====================================================== */
 @media (max-width: 768px) {
+  .dropdown:hover .dropdown-content {
+      display: none;
+    }
+  
+    .dropdown-content {
+      position: static;
+    }
+  
+    .dropdown.active .dropdown-content {
+      display: block;
+    }
   .scroll-slider .card {
     min-width: 200px;
   }

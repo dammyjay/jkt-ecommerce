@@ -102,6 +102,108 @@ async function initTables() {
       -- CATEGORIES (updated with image)
       ALTER TABLE categories ADD COLUMN IF NOT EXISTS image_url TEXT;
 
+      -- =========================
+      -- PROJECTS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS projects (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        short_description TEXT,
+        full_description TEXT,
+        category VARCHAR(100),
+        complexity_level VARCHAR(50), -- Beginner, Intermediate, Advanced
+        estimated_price NUMERIC(12,2),
+        price_type VARCHAR(50) DEFAULT 'quote', -- fixed / quote
+        thumbnail_image TEXT,
+        is_featured BOOLEAN DEFAULT false,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT IMAGES
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_images (
+        id SERIAL PRIMARY KEY,
+        project_id INT REFERENCES projects(id) ON DELETE CASCADE,
+        image_url TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT VIDEOS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_videos (
+        id SERIAL PRIMARY KEY,
+        project_id INT REFERENCES projects(id) ON DELETE CASCADE,
+        video_type VARCHAR(50), -- youtube / cloudinary
+        video_url TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT DOCUMENTS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_documents (
+        id SERIAL PRIMARY KEY,
+        project_id INT REFERENCES projects(id) ON DELETE CASCADE,
+        document_type VARCHAR(50), -- proposal / agreement / requirements
+        file_url TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT BOOKINGS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_bookings (
+        id SERIAL PRIMARY KEY,
+        project_id INT REFERENCES projects(id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        description TEXT,
+        expected_budget NUMERIC(12,2),
+        timeline VARCHAR(100),
+        status VARCHAR(50) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT QUOTATIONS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_quotations (
+        id SERIAL PRIMARY KEY,
+        booking_id INT REFERENCES project_bookings(id) ON DELETE CASCADE,
+        quoted_amount NUMERIC(12,2),
+        delivery_timeline VARCHAR(100),
+        quotation_file TEXT,
+        status VARCHAR(50) DEFAULT 'sent',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- =========================
+      -- PROJECT AGREEMENTS
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_agreements (
+        id SERIAL PRIMARY KEY,
+        booking_id INT REFERENCES project_bookings(id) ON DELETE CASCADE,
+        agreement_file TEXT NOT NULL,
+        is_signed BOOLEAN DEFAULT false,
+        signed_at TIMESTAMP
+      );
+
+      -- =========================
+      -- PAYMENT MILESTONES
+      -- =========================
+      CREATE TABLE IF NOT EXISTS project_milestones (
+        id SERIAL PRIMARY KEY,
+        booking_id INT REFERENCES project_bookings(id) ON DELETE CASCADE,
+        title VARCHAR(150),
+        amount NUMERIC(12,2),
+        is_paid BOOLEAN DEFAULT false,
+        payment_reference TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+
     `);
 
     console.log("✅ All tables initialized successfully");

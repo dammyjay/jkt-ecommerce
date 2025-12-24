@@ -1,0 +1,30 @@
+<h1>My Booked Projects</h1>
+
+<% if (bookings.length === 0) { %>
+  <p>You have no booked projects yet.</p>
+<% } else { %>
+  <table>
+    <tr>
+      <th>Project</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+    <% bookings.forEach(b => { %>
+      <tr>
+        <td><%= b.title %></td>
+        <td><%= b.description %></td>
+        <td><%= b.status %></td>
+        <td>
+          <% if (b.status === 'quoted') { %>
+            <form action="/projects/quotation/accept/<%= b.id %>" method="POST">
+              <button>Accept Quotation</button>
+            </form>
+          <% } else { %>
+            <span>N/A</span>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+<% } %>

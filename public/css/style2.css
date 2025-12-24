@@ -200,7 +200,7 @@
 }
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--s-md);
 }
 .testimonial-card {
@@ -941,7 +941,53 @@ select:focus {
   font-weight: 600;
 }
 
+.testimonial-card {
+  min-width: 280px;
+  text-align: center;
+  padding: 20px;
+  width: 150px;
+}
 
+.testimonial-avatar {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 10px;
+}
+
+.testimonial-avatar.placeholder {
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  width: 60px;
+  height: 60px;
+}
+
+.stars {
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+
+.star {
+  color: #f5b301;;
+  font-size: 1rem;
+}
+
+.star.active {
+  color: #f5b301;
+}
+
+.testimonial-message {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.testimonial-name {
+  font-weight: 600;
+}
 
 /* ======================================================
    ANIMATIONS

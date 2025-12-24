@@ -99,23 +99,52 @@ exports.getTestimonialForm = (req, res) => {
 };
 
 // Create testimonial (submitted by user, default approved = false)
+// exports.createTestimonial = async (req, res) => {
+//   try {
+//     const { name, message } = req.body;
+
+//     // Insert into DB with approved = false
+//     await pool.query(
+//       'INSERT INTO testimonials (name, message, is_approved) VALUES ($1, $2, $3)',
+//       [name, message, false]
+//     );
+
+//     // Redirect back or show a success message
+//     res.redirect("/users/testimonials?success=true");
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Error adding testimonial");
+//   }
+// };
+
+
+
+// Create testimonial (submitted by user, default approved = false)
 exports.createTestimonial = async (req, res) => {
   try {
-    const { name, message } = req.body;
+    const { name, message, rating } = req.body;
+    let imageUrl = null;
 
-    // Insert into DB with approved = false
+    // ✅ Upload image to Cloudinary (same pattern as updateProfile)
+    if (req.file && req.file.path) {
+      const upload = await cloudinary.uploader.upload(req.file.path, {
+        folder: "JKT-ecommerce/testimonials",
+      });
+      imageUrl = upload.secure_url;
+    }
+
     await pool.query(
-      'INSERT INTO testimonials (name, message, is_approved) VALUES ($1, $2, $3)',
-      [name, message, false]
+      `INSERT INTO testimonials 
+        (name, message, rating, image_url, is_approved)
+       VALUES ($1, $2, $3, $4, false)`,
+      [name, message, rating, imageUrl]
     );
 
-    // Redirect back or show a success message
+    console.log("✅ Testimonial submitted (pending approval)");
+
     res.redirect("/users/testimonials?success=true");
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error adding testimonial:", err);
     res.status(500).send("Error adding testimonial");
   }
 };
-
-
-

@@ -93,7 +93,11 @@ async function initTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
-      ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT false;
+      ALTER TABLE testimonials
+      ADD COLUMN IF NOT EXISTS rating INT CHECK (rating BETWEEN 1 AND 5),
+      ADD COLUMN IF NOT EXISTS image_url TEXT,
+      ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT false;
+
 
       -- CATEGORIES (updated with image)
       ALTER TABLE categories ADD COLUMN IF NOT EXISTS image_url TEXT;

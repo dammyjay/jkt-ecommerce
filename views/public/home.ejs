@@ -64,7 +64,7 @@
 </section>
 
 <!-- ======================= TESTIMONIALS ======================= -->
-<section class="testimonials">
+<!-- <section class="testimonials">
   <div class="container home-banner-card">
     <h2>What Our Customers Say</h2>
 
@@ -81,8 +81,43 @@
       <a href="/users/testimonials" class="btn btn-secondary">Leave a Testimony</a>
     </div>
   </div>
-</section>
+</section> -->
 
+<section class="testimonials">
+  <div class="container home-banner-card">
+    <h2>What Our Customers Say</h2>
+
+    <div class="scroll-slider testimonial-slider">
+      <% testimonials.forEach(t => { %>
+        <div class="card testimonial-card">
+
+          <% if (t.image_url) { %>
+            <img src="<%= t.image_url %>" class="testimonial-avatar" alt="<%= t.name %>" style="width:60px; height:60px; border-radius: 50%;">
+          <% } else { %>
+            <div class="testimonial-avatar placeholder">
+              <%= t.name.charAt(0).toUpperCase() %>
+            </div>
+          <% } %>
+
+          <div class="stars">
+            <% for(let i = 1; i <= 5; i++) { %>
+              <span class="<%= i <= t.rating ? 'star active' : 'star' %>">★</span>
+            <% } %>
+          </div>
+
+          <p class="testimonial-message">"<%= t.message %>"</p>
+          <p class="testimonial-name">— <%= t.name %></p>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="btn btn-sm">
+      <a href="/users/testimonials" class="btn btn-secondary">
+        Leave a Testimony
+      </a>
+    </div>
+  </div>
+</section>
 
 <!-- ======================= NEW ARRIVALS ======================= -->
 <section class="new-arrivals">

@@ -29,7 +29,7 @@ router.get("/profile", (req, res) => {
 router.post("/profile", upload.single("profileImage"), updateProfile);
 
 router.post("/subscribe", userController.subscribe);
-router.post("/testimonials/create", userController.createTestimonial);
+router.post("/testimonials/create", upload.single("image"), userController.createTestimonial);
 router.get("/testimonials", userController.getTestimonialForm);
 
 

@@ -1,9 +1,11 @@
-<h1>My Booked Projects</h1>
+<div class="container">
+  <h1>My Booked Projects</h1>
 
 <% if (bookings.length === 0) { %>
   <p>You have no booked projects yet.</p>
 <% } else { %>
-  <table>
+  <div class="table-container">
+    <table class="table">
     <tr>
       <th>Project</th>
       <th>Description</th>
@@ -18,7 +20,7 @@
         <td>
           <% if (b.status === 'quoted') { %>
             <form action="/projects/quotation/accept/<%= b.id %>" method="POST">
-              <button>Accept Quotation</button>
+              <button class="btn btn-secondary btn-sm">Accept Quotation</button>
             </form>
           <% } else { %>
             <span>N/A</span>
@@ -27,4 +29,9 @@
       </tr>
     <% }) %>
   </table>
+  </div>
+  
 <% } %>
+
+</div>
+

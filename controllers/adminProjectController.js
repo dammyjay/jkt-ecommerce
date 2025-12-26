@@ -232,23 +232,119 @@ exports.updateProgress = async (req, res) => {
 };
 
 // SEND QUOTATION
+// exports.sendQuotation = async (req, res) => {
+//   const { booking_id, quoted_amount, delivery_timeline } = req.body;
+
+//   let quotationUrl = null;
+
+//   if (req.file) {
+//     const upload = await cloudinary.uploader.upload(req.file.path, {
+//       folder: "JKT-ecommerce/quotations",
+//       resource_type: "raw", // PDFs, docs
+//     });
+//     quotationUrl = upload.secure_url;
+//   }
+
+//   await pool.query(
+//     `INSERT INTO project_quotations
+//      (booking_id, quoted_amount, delivery_timeline, quotation_file)
+//      VALUES ($1,$2,$3,$4)`,
+//     [booking_id, quoted_amount, delivery_timeline, quotationUrl]
+//   );
+
+//   await pool.query(
+//     "UPDATE project_bookings SET status='quoted' WHERE id=$1",
+//     [booking_id]
+//   );
+
+//   const userRes = await pool.query(`
+//     SELECT u.email, u.fullname, p.title
+//     FROM project_bookings pb
+//     JOIN users2 u ON u.id = pb.user_id
+//     JOIN projects p ON p.id = pb.project_id
+//     WHERE pb.id = $1
+//   `, [booking_id]);
+
+//   const user = userRes.rows[0];
+
+//   await sendEmail({
+//     to: user.email,
+//     subject: `Quotation for ${user.title}`,
+//     html: quotationTemplate({
+//       name: user.fullname,
+//       project: user.title,
+//       amount: quoted_amount,
+//       timeline: delivery_timeline,
+//       quotationUrl
+//     })
+//   });
+
+
+//   res.redirect("/admin/projects/bookings");
+// };
+
 exports.sendQuotation = async (req, res) => {
   const { booking_id, quoted_amount, delivery_timeline } = req.body;
-  const quotationFile = req.file?.path;
+
+  let quotationUrl = null;
+
+  if (req.file) {
+    const upload = await cloudinary.uploader.upload(req.file.path, {
+      folder: "JKT-ecommerce/quotations",
+      resource_type: "raw",
+    });
+    quotationUrl = upload.secure_url;
+  }
 
   await pool.query(
     `INSERT INTO project_quotations
      (booking_id, quoted_amount, delivery_timeline, quotation_file)
      VALUES ($1,$2,$3,$4)`,
-    [booking_id, quoted_amount, delivery_timeline, quotationFile]
+    [booking_id, quoted_amount, delivery_timeline, quotationUrl]
   );
 
-  await pool.query("UPDATE project_bookings SET status='quoted' WHERE id=$1", [
-    booking_id,
-  ]);
+  await pool.query(
+    "UPDATE project_bookings SET status='quoted' WHERE id=$1",
+    [booking_id]
+  );
 
-  res.redirect("/admin/project-bookings");
+  const userRes = await pool.query(
+    `
+    SELECT 
+      u.email,
+      u.fullname,
+      p.title AS project_title
+    FROM project_bookings pb
+    JOIN users2 u ON u.id = pb.user_id
+    JOIN projects p ON p.id = pb.project_id
+    WHERE pb.id = $1
+    `,
+    [booking_id]
+  );
+
+  if (userRes.rows.length === 0) {
+    console.error("❌ No user found for booking:", booking_id);
+    return res.redirect("/admin/projects/bookings");
+  }
+
+  const user = userRes.rows[0];
+
+  await sendEmail({
+    to: user.email,
+    subject: `Quotation for ${user.project_title}`,
+    html: quotationTemplate({
+      fullname: user.fullname,
+      project_title: user.project_title,
+      amount: quoted_amount,
+      timeline: delivery_timeline,
+      company_name: "JKT Technologies",
+    }).html,
+  });
+
+  res.redirect("/admin/projects/bookings");
 };
+
+
 
 
 // controllers/adminProjectController.js

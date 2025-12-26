@@ -6,10 +6,9 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 router.get("/projects", isAdmin, admin.getProjects);
-router.get("/projects/:id", isAdmin, admin.getProjectDetails);
-
 router.get("/projects/bookings", isAdmin, admin.getBookings);
 
+router.get("/projects/:id", isAdmin, admin.getProjectDetails);
 router.get("/projects/create", isAdmin, (req, res) =>
   res.render("admin/projects/create")
 );

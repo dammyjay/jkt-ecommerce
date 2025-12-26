@@ -1,27 +1,92 @@
-<h1>Project Bookings</h1>
+<div class="container">
+  <h1>📌 Project Bookings</h1>
 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Project</th>
-    <th>Status</th>
-    <th>Action</th>
-  </tr>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Quotation</th>
+        </tr>
+      </thead>
 
-  <% bookings.forEach(b => { %>
-    <tr>
-      <td><%= b.fullname %></td>
-      <td><%= b.title %></td>
-      <td><%= b.status %></td>
-      <td>
-        <form action="/admin/projects/quotation" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="booking_id" value="<%= b.id %>" />
-          <input type="number" name="quoted_amount" placeholder="Amount" required />
-          <input type="text" name="delivery_timeline" placeholder="Timeline" required />
-          <input type="file" name="quotation" required />
-          <button>Send Quotation</button>
-        </form>
-      </td>
-    </tr>
-  <% }) %>
-</table>
+      <tbody>
+        <% bookings.forEach(b => { %>
+          <tr>
+            <td><%= b.fullname %></td>
+            <td><%= b.title %></td>
+            <td>
+              <span class="status <%= b.status %>"><%= b.status %></span>
+            </td>
+            <td>
+              <% if (b.status === 'pending') { %>
+                <button 
+                  class="btn btn-primary btn-sm"
+                  onclick="openQuotationModal('<%= b.id %>', '<%= b.fullname %>', '<%= b.title %>')"
+                >
+                  📄 Send Quotation
+                </button>
+              <% } else { %>
+                <span class="badge success">Quotation Sent</span>
+              <% } %>
+            </td>
+
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div id="quotationModal" class="modal">
+  <div class="modal-box">
+    <h3>📄 Send Quotation</h3>
+    <p id="quotationInfo"></p>
+
+    <form 
+      action="/admin/projects/quotation" 
+      method="POST" 
+      enctype="multipart/form-data"
+    >
+      <input type="hidden" name="booking_id" id="bookingId">
+
+      <label>Quoted Amount</label>
+      <input type="number" name="quoted_amount" required>
+
+      <label>Delivery Timeline</label>
+      <input type="text" name="delivery_timeline" required>
+
+      <label>Quotation Document (PDF)</label>
+      <input type="file" name="quotation" accept="application/pdf" required>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeQuotationModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Send Quotation</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function openQuotationModal(id, user, project) {
+    document.getElementById("bookingId").value = id;
+    document.getElementById("quotationInfo").innerText =
+      `Sending quotation to ${user} for "${project}"`;
+    document.getElementById("quotationModal").style.display = "block";
+  }
+
+  function closeQuotationModal() {
+    document.getElementById("quotationModal").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("quotationModal");
+    if (event.target == modal) {
+      closeQuotationModal();
+    }
+  }
+</script>

@@ -203,6 +203,15 @@ async function initTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
+      ALTER TABLE project_bookings
+      DROP CONSTRAINT project_bookings_user_id_fkey;
+
+      ALTER TABLE project_bookings
+      ADD CONSTRAINT project_bookings_user_id_fkey
+      FOREIGN KEY (user_id)
+      REFERENCES users2(id)
+      ON DELETE CASCADE;
+
 
     `);
 

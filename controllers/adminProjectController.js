@@ -168,16 +168,24 @@ exports.getProjects = async (req, res) => {
   res.render("admin/projects/index", { projects: rows });
 };
 
-exports.getProjectDetails = async (req, res) => {
-  const projectId = req.params.id;
 
-  const projectRes = await pool.query("SELECT * FROM projects WHERE id=$1", [
-    projectId,
-  ]);
+exports.getProjectDetails = async (req, res) => {
+  const projectId = parseInt(req.params.id);
+
+  if (isNaN(projectId)) {
+    return res.status(400).send("Invalid project ID");
+  }
+
+  const projectRes = await pool.query(
+    "SELECT * FROM projects WHERE id=$1",
+    [projectId]
+  );
+
   const imagesRes = await pool.query(
     "SELECT * FROM project_images WHERE project_id=$1",
     [projectId]
   );
+
   const videosRes = await pool.query(
     "SELECT * FROM project_videos WHERE project_id=$1",
     [projectId]
@@ -191,18 +199,27 @@ exports.getProjectDetails = async (req, res) => {
 };
 
 
-// VIEW BOOKINGS
+// VIEW BOOKINGS (ADMIN)
 exports.getBookings = async (req, res) => {
   const { rows } = await pool.query(`
-    SELECT pb.*, u.fullname, p.title
+    SELECT 
+      pb.id,
+      pb.status,
+      pb.expected_budget,
+      pb.timeline,
+      pb.created_at,
+      u.fullname,
+      p.title
     FROM project_bookings pb
-    JOIN users u ON u.id = pb.user_id
+    JOIN users2 u ON u.id = pb.user_id
     JOIN projects p ON p.id = pb.project_id
     ORDER BY pb.created_at DESC
   `);
 
   res.render("admin/projects/bookings", { bookings: rows });
 };
+
+
 exports.updateProgress = async (req, res) => {
   const { booking_id, status } = req.body;
 

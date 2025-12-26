@@ -289,10 +289,18 @@ exports.sendQuotation = async (req, res) => {
   let quotationUrl = null;
 
   if (req.file) {
+    // const upload = await cloudinary.uploader.upload(req.file.path, {
+    //   folder: "JKT-ecommerce/quotations",
+    //   resource_type: "raw",
+    // });
     const upload = await cloudinary.uploader.upload(req.file.path, {
       folder: "JKT-ecommerce/quotations",
       resource_type: "raw",
+      public_id: `quotation_${booking_id}.pdf`,
+      type: "upload",        // ✅ REQUIRED
+      access_mode: "public", // ✅ REQUIRED
     });
+
     quotationUrl = upload.secure_url;
   }
 
@@ -343,7 +351,7 @@ exports.sendQuotation = async (req, res) => {
 
   res.redirect("/admin/projects/bookings");
 };
-
+    
 
 
 

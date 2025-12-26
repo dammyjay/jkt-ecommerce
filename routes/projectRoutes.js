@@ -13,6 +13,11 @@ router.get("/", user.listProjects);
 // router.post("/quotation/accept/:id", isAuthenticated, user.acceptQuotation);
 
 router.get("/dashboard/userProjects", isAuthenticated, user.userProjects);
+router.get(
+  "/quotation/:id",
+  isAuthenticated,
+  user.viewQuotation
+);
 router.post("/quotation/accept/:id", isAuthenticated, user.acceptQuotation);
 
 router.get("/:id/book", isAuthenticated, user.showBookingForm);

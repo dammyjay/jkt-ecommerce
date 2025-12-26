@@ -117,6 +117,39 @@ exports.showBookingForm = async (req, res) => {
     res.render("dashboard/userProjects", { bookings: rows });
   };
 
+
+  exports.viewQuotation = async (req, res) => {
+  const bookingId = req.params.id;
+  const userId = req.session.user.id;
+
+  const result = await pool.query(
+    `
+    SELECT 
+      q.quoted_amount,
+      q.delivery_timeline,
+      q.quotation_file,
+      p.title,
+      pb.description,
+      pb.status
+    FROM project_bookings pb
+    JOIN project_quotations q ON q.booking_id = pb.id
+    JOIN projects p ON p.id = pb.project_id
+    WHERE pb.id = $1 AND pb.user_id = $2
+    `,
+    [bookingId, userId]
+  );
+
+  if (result.rows.length === 0) {
+    return res.redirect("/projects/dashboard/userProjects");
+  }
+
+  res.render("dashboard/viewQuotation", {
+    quotation: result.rows[0],
+    bookingId,
+  });
+};
+
+
 // ACCEPT QUOTATION
 exports.acceptQuotation = async (req, res) => {
   const bookingId = req.params.id;

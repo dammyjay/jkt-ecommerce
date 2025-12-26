@@ -17,7 +17,7 @@
         <td><%= b.title %></td>
         <td><%= b.description %></td>
         <td><%= b.status %></td>
-        <td>
+        <!-- <td>
           <% if (b.status === 'quoted') { %>
             <form action="/projects/quotation/accept/<%= b.id %>" method="POST">
               <button class="btn btn-secondary btn-sm">Accept Quotation</button>
@@ -25,7 +25,20 @@
           <% } else { %>
             <span>N/A</span>
           <% } %>
+        </td> -->
+        <td>
+          <% if (b.status === 'quoted') { %>
+            <a 
+              href="/projects/quotation/<%= b.id %>" 
+              class="btn btn-primary btn-sm"
+            >
+              View Quotation
+            </a>
+          <% } else { %>
+            <span>N/A</span>
+          <% } %>
         </td>
+
       </tr>
     <% }) %>
   </table>
